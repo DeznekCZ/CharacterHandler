@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+
+<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="601.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+   <left>
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fx:id="characterImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../Pictures/431090_2597308065964_1295377190_n.jpg" />
+               </image>
+            </ImageView>
+            <TextArea prefHeight="30.0" prefWidth="113.0" promptText="Jméno" />
+            <ListView fx:id="primalStats" prefHeight="200.0" prefWidth="200.0" />
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+        <tabs>
+          <Tab text="Dovednosti a výbava">
+               <content>
+                  <BorderPane prefHeight="200.0" prefWidth="200.0" />
+               </content>
+          </Tab>
+          <Tab text="Výstroj a výzbroj">
+               <content>
+                  <BorderPane prefHeight="200.0" prefWidth="200.0" />
+               </content>
+          </Tab>
+            <Tab text="Historie">
+               <content>
+                  <BorderPane prefHeight="200.0" prefWidth="200.0">
+                     <center>
+                        <TextArea prefHeight="200.0" prefWidth="200.0" promptText="Historie Postavy" text="Narodil se sedkovi a rozbil mu kušnu." wrapText="true" BorderPane.alignment="CENTER" />
+                     </center>
+                  </BorderPane>
+               </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </center>
+   <bottom>
+      <TitledPane animated="false" collapsible="false" text="Životy">
+         <content>
+            <VBox fx:id="livesTab" BorderPane.alignment="CENTER">
+               <children>
+                  <HBox>
+                     <children>
+                        <CheckBox graphicTextGap="0.0" mnemonicParsing="false" />
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <CheckBox graphicTextGap="0.0" mnemonicParsing="false" />
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <CheckBox graphicTextGap="0.0" mnemonicParsing="false" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </content>
+      </TitledPane>
+   </bottom>
+</BorderPane>

@@ -1,0 +1,67 @@
+#STATS{
+	sila[sil]
+	obratnost[obr]
+	zrucnost[zrc]
+	vule[vol]
+	inteligence[int]
+	charisma[chr]
+	
+	odolnost[odl] = sil
+	kondice[kdc] = odl + vol + 5
+	moc = vol
+	smysly[sms] = zrc
+	
+	iniciativa[inc] {
+		facetoface[f] = obr
+		ranged[r] = roundDown( (obr + zrc) / 2 )
+		magic[m] = roundDown( (obr + zrc) / 2 )
+	}
+	
+	boj {
+		facetoface[f] = roundDown( obr / 2 )
+		ranged[r] = roundDown( zrc / 2 )
+		obrana[def] = roundUp ( obr / 2 ) + 5
+		seslani = int
+	}
+}
+
+#LIVES {
+	value = tabs(lives,kdc)
+}
+
+#WEAPON_STATS[zbr] {
+	nazev[n]
+	delka[del]
+	utocnost[uc]
+	obrana[oc]
+	zraneni[zz]
+}
+
+#WEAPON_F2F {
+	winiciative[winc] = zbr.del + inc.f
+	watack[wuc] = zbr.uc + boj.f
+	wdefense[woc] = zbr.oc + boj.def
+}
+
+#WEAPON_RANGED {
+	winiciative[winc] = inc.r
+	watack[wuc] = wep.uc + boj.r
+	wdefense[woc] = boj.def
+}
+
+#MAGIC_STATS[kou] {
+	moc
+	narocnost[nar]
+	bonus[bon]:Array {
+		typ
+		pocet
+	}
+	pokusy[pok]:Check
+	utok:Enum(zbr,boj.r)
+	skola[s]
+}
+
+#MAGIC_ENTRY {
+	kseslani[kses] = kou.nar - ses
+	kutok
+}
