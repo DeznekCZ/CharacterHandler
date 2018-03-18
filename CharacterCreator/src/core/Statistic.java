@@ -1,8 +1,5 @@
 package core;
 
-import java.util.List;
-import java.util.Properties;
-
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.StringBinding;
@@ -11,14 +8,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Node;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
-import javafx.scene.layout.GridPane;
-import javafx.util.Callback;
 
 public class Statistic implements InvalidationListener {
 
@@ -101,19 +91,15 @@ public class Statistic implements InvalidationListener {
 	}
 
 	public static Statistic init(Statistic...sumStatistics) {
-		return init("SUM", sumStatistics);
+		return init("SUM", 0, sumStatistics);
 	}
 
-	public static Statistic init(Object...sumStatistics) {
-		return init("SUM", sumStatistics);
+	public static Statistic init(int constant, Statistic...sumStatistics) {
+		return init("SUM", constant, sumStatistics);
 	}
 
 	public static Statistic init(String name, Statistic...sumStatistics) {
-		Statistic new_statistic = new Statistic(name);
-		if (sumStatistics != null) for (Statistic statistic : sumStatistics) {
-			new_statistic.addIncrement(statistic);
-		}
-		return new_statistic;
+		return init(name, 0, sumStatistics);
 	}
 
 	/**
@@ -122,15 +108,17 @@ public class Statistic implements InvalidationListener {
 	 * @param sumStatistics Array of 
 	 * @return
 	 */
-	public static Statistic init(String name, Object...sumStatistics) {
+	public static Statistic init(String name, int constant, Statistic...sumStatistics) {
 		Statistic new_statistic = new Statistic(name);
-		if (sumStatistics != null) for (Object statistic : sumStatistics) {
-			if (statistic instanceof Statistic)
-				new_statistic.addIncrement((Statistic) statistic);
-			else if (statistic instanceof Integer)
-				new_statistic.addIncrement((Integer) statistic);
-			else
-				System.out.println(statistic.getClass() + " is ignored.");
+		if (sumStatistics != null)
+		{
+			for (Statistic statistic : sumStatistics) {
+				new_statistic.addIncrement(statistic);
+			}
+		}
+		if (constant != 0)
+		{
+			new_statistic.addIncrement(constant);
 		}
 		return new_statistic;
 	}

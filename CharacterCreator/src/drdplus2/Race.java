@@ -5,55 +5,49 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.util.StringConverter;
-
-class Attr {
-	@SafeVarargs
-	public static <L> L[] v(L...value) {
-		return value;
-	}
-}
+import static core.Attr.v;
 
 public enum Race {
 	/*name, sil, obr, zrc, vol, int, chr, odl, sms, boj, rychlost*/
 	HUMAN       ("èlovìk"         ,
-			Attr.v(Sex.MALE, Sex.FEMALE),
-			Attr.v( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), Attr.v(-1,0,0,0,0,1,0,0,0,0)),
+			v(Sex.MALE, Sex.FEMALE),
+			v( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), v(-1,0,0,0,0,1,0,0,0,0)),
 	MOUNTAINER  ("horal"          ,
-			Attr.v(Sex.MALE, Sex.FEMALE),
-			Attr.v( 1, 0, 0, 1,-1,-1, 0, 0, 0, 0), Attr.v(-1,0,0,0,0,1,0,0,0,0)),
+			v(Sex.MALE, Sex.FEMALE),
+			v( 1, 0, 0, 1,-1,-1, 0, 0, 0, 0), v(-1,0,0,0,0,1,0,0,0,0)),
 	ELVEN       ("elf"            ,
-			Attr.v(Sex.MALE, Sex.FEMALE),
-			Attr.v(-1, 1, 1,-2, 1, 1,-1, 0, 0, 0), Attr.v(-1,0,1,0,-1,1,0,0,0,0)),
+			v(Sex.MALE, Sex.FEMALE),
+			v(-1, 1, 1,-2, 1, 1,-1, 0, 0, 0), v(-1,0,1,0,-1,1,0,0,0,0)),
 	GREEN_ELVEN ("zelený elf"     ,
-			Attr.v(Sex.MALE, Sex.FEMALE),
-			Attr.v(-1, 1, 0,-1, 1, 1,-1, 0, 0, 0), Attr.v(-1,0,1,0,-1,1,0,0,0,0)),
+			v(Sex.MALE, Sex.FEMALE),
+			v(-1, 1, 0,-1, 1, 1,-1, 0, 0, 0), v(-1,0,1,0,-1,1,0,0,0,0)),
 	DARK_ELVEN  ("temný elf"      ,
-			Attr.v(Sex.MALE, Sex.FEMALE),
-			Attr.v( 0, 0, 0, 0, 1, 0,-1, 0, 0, 0), Attr.v(-1,0,1,0,-1,1,0,0,0,0)),
+			v(Sex.MALE, Sex.FEMALE),
+			v( 0, 0, 0, 0, 1, 0,-1, 0, 0, 0), v(-1,0,1,0,-1,1,0,0,0,0)),
 	DWARF       ("trpaslík"       ,
-			Attr.v(Sex.MALE, Sex.FEMALE),
-			Attr.v( 1,-1, 0, 2,-1,-2, 1,-1, 0, 0), Attr.v(0,0,-1,0,1,0,0,0,0,0)),
+			v(Sex.MALE, Sex.FEMALE),
+			v( 1,-1, 0, 2,-1,-2, 1,-1, 0, 0), v(0,0,-1,0,1,0,0,0,0,0)),
 	MOUNT_DWARF ("horský trpaslík",
-			Attr.v(Sex.MALE, Sex.FEMALE),
-			Attr.v( 2,-1, 0, 2,-2,-2, 1,-1, 0, 0), Attr.v(-1,0,0,0,0,1,0,0,0,0)),
+			v(Sex.MALE, Sex.FEMALE),
+			v( 2,-1, 0, 2,-2,-2, 1,-1, 0, 0), v(-1,0,0,0,0,1,0,0,0,0)),
 	HOBBIT      ("hobit"          ,
-			Attr.v(Sex.MALE, Sex.FEMALE),
-			Attr.v(-3, 1, 1, 0,-1, 2, 0, 0, 0,-1), Attr.v(-1,0,0,0,0,1,0,0,0,0)),
+			v(Sex.MALE, Sex.FEMALE),
+			v(-3, 1, 1, 0,-1, 2, 0, 0, 0,-1), v(-1,0,0,0,0,1,0,0,0,0)),
 	KROL        ("krol"           ,
-			Attr.v(Sex.MALE, Sex.FEMALE),
-			Attr.v( 3,-2,-1, 1,-3,-1, 0, 0, 1, 1)),
+			v(Sex.MALE, Sex.FEMALE),
+			v( 3,-2,-1, 1,-3,-1, 0, 0, 1, 1)),
 	WILD_KROL   ("krol divoký"    ,
-			Attr.v(Sex.MALE, Sex.FEMALE),
-			Attr.v( 3,-1,-2, 2,-3,-2, 0, 0, 1, 1)), //boj a rychlost +1
+			v(Sex.MALE, Sex.FEMALE),
+			v( 3,-1,-2, 2,-3,-2, 0, 0, 1, 1)), //boj a rychlost +1
 	ORC         ("skøet"          ,
-			Attr.v(Sex.MALE, Sex.FEMALE),
-			Attr.v( 0, 2, 0,-1, 0,-2, 0, 1, 0, 0), Attr.v(-1,0,0,1,0,0,0,0,0,0)),
+			v(Sex.MALE, Sex.FEMALE),
+			v( 0, 2, 0,-1, 0,-2, 0, 1, 0, 0), v(-1,0,0,1,0,0,0,0,0,0)),
 	SCURUT      ("skurut"         ,
-			Attr.v(Sex.UNDEF),
-			Attr.v( 1, 1,-1, 0, 0,-2, 0, 1, 0, 0)),
+			v(Sex.UNDEF),
+			v( 1, 1,-1, 0, 0,-2, 0, 1, 0, 0)),
 	GOBLIN      ("goblin"         ,
-			Attr.v(Sex.UNDEF),
-			Attr.v(-1, 2, 1,-2, 0,-1, 0, 1, 0, 0));
+			v(Sex.UNDEF),
+			v(-1, 2, 1,-2, 0,-1, 0, 1, 0, 0));
 	
 	private String rName;
 	private Integer[] attributes;

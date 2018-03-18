@@ -6,18 +6,18 @@ import java.util.ResourceBundle;
 import core.ModuleLoader;
 import core.Statistic;
 import javafx.collections.ListChangeListener.Change;
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.ChoiceBox;
 
-public class DrDplus2 extends ModuleLoader implements Initializable {
+public class DrDplus2 extends ModuleLoader<Race, Sex> implements Initializable {
 
-	@FXML
-	private ChoiceBox<Race> raceChoice;
+	
 
-	@FXML
-	private ChoiceBox<Sex> sexChoice;
+	public static DrDplus2 INSTANCE;
+	
+	public DrDplus2() {
+		INSTANCE = this;
+	}
 	
 	public static final String name = "DrD+2";
 	
@@ -28,7 +28,7 @@ public class DrDplus2 extends ModuleLoader implements Initializable {
 	static {
 		Race.INIT();
 		Sex.INIT();
-//		RaiseUp.INIT();
+		Skill.INIT();
 	}
 	
 	Statistic sila = Statistic.init("síla", Race.sila);
@@ -41,11 +41,11 @@ public class DrDplus2 extends ModuleLoader implements Initializable {
 	Statistic odolnost = Statistic.init("odolnost", sila, Race.odolnost)
 			.description("Urèuje schopnost odolání vùži jedùm."
 					+ "\n= síla");
-	Statistic kondice = Statistic.init(odolnost, vule, Statistic.constant(5)).maximal("kondice", 10)
+	Statistic kondice = Statistic.init(5, odolnost, vule).maximal("kondice", 10)
 			.description("Urèuje velikost zdraví a únavy, snižuje ji nošení zbrojí."
 					+ "\n= odolnost + vùle + 5 (minimum 10)");
 	Statistic moc = Statistic.init("moc", vule)
-			.description("Urèuji maximální velikost kouzel, kterou mùže kouzlící postava seslat."
+			.description("Urèuje maximální velikost kouzel, kterou mùže kouzlící postava seslat."
 					+ "\n= vùle");
 	Statistic smysly = Statistic.init("smysly", zrucnost, Race.smysly)
 			.description("Používá se pro hledání a rychlé reakce na okolní prostøedí."
@@ -83,7 +83,7 @@ public class DrDplus2 extends ModuleLoader implements Initializable {
 	Statistic boj_ranged = obratnost.divideDown("støelba", 2)
 			.description("Tento bonus se pøièítá k útoènosti zbranì pro støelnu nebo vrh."
 					+ "\n= zruènost / 2 (zaokrouhleno dolu)");
-	Statistic boj_def = Statistic.init("obrana", obratnost.divideUp("/2", 2), 5)
+	Statistic boj_def = Statistic.init("obrana", 5, obratnost.divideUp("/2", 2))
 			.description("Tento bonus se urèuje pasivní obranu, pøièítá se k obranì zbraní."
 					+ "\n= obratnost / 2 (zaokrouhleno nahoru)");
 	Statistic boj_magic = Statistic.init("sesílání", inteligence)
@@ -106,10 +106,12 @@ public class DrDplus2 extends ModuleLoader implements Initializable {
 		sexChoice.getSelectionModel().select(Sex.MALE);
 		Sex.sex.bind(sexChoice.getSelectionModel().selectedItemProperty());
 		
+		health(3, Life.init(kondice));
 		
+		// Character definition
 		
-		groupStats(primalStats, "Hlavní atributy", sila, obratnost, zrucnost, vule, inteligence, charisma);
-		groupStats(primalStats, "Odvozené atributy", odolnost, kondice, moc, smysly);
+		groupStats(primalStats, "Hlavní vlastnosti", sila, obratnost, zrucnost, vule, inteligence, charisma);
+		groupStats(primalStats, "Odvozené vlastnosti", odolnost, kondice, moc, smysly);
 		groupStats(primalStats, "Vzhled", vzhled_krasa, vzhled_dustojnost, vzhled_nebezpecnost);
 		groupStats(primalStats, "Iniciativa", iniciativa_ftf, iniciativa_ranged, iniciativa_magic);
 		groupStats(primalStats, "Boj", boj_ftf, boj_ranged, boj_def, boj_magic);
@@ -121,6 +123,12 @@ public class DrDplus2 extends ModuleLoader implements Initializable {
 		vule.addIncrement(1);
 		inteligence.addIncrement(1);
 		moc.addIncrement(3);
-		
+
+		characterName.setText("Torwald de Tureda");
+		characterHistory.setText("Rodné mìsto: Uthork"
+				+ "\nRodina runových kováøù: De Tureda"
+				+ "\nPøístup do:"
+				+ "\n- hlavní mìsto"
+				+ "\n- Holubí vrch (runová tvrz, banda kopií)");
 	}
 }
