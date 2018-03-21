@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module id="drd+2" xmlns="database.xsd">
+	<stats>
+		<statgroup id="main" name="Hlavní vlastnosti" >
+			<stat id="sil" name="síla"        desc="Vyjadřuje sílu hrdiny"/>
+			<stat id="obr" name="obratnost"   desc="Vyjadřuje obratnost hrdiny"/>
+			<stat id="zrc" name="zručnost"    desc="Vyjadřuje zručnost hrdiny"/>
+			<stat id="vol" name="vůle"        desc="Vyjadřuje vůli hrdiny"/>
+			<stat id="int" name="inteligence" desc="Vyjadřuje inteligenci hrdiny"/>
+			<stat id="chr" name="charisma"    desc="Vyjadřuje charismu hrdiny"/>
+		</statgroup>
+		<statgroup id="ext" name="Odvozené vlastnosti" >
+			<stat id="odl" name="odolnost"    desc="Vyjadřuje odolnost hrdiny">
+				<value id="sil"/>
+			</stat>
+			<stat id="kon" name="kondice"    desc="Vyjadřuje kondici hrdiny\nDále se využívá pro výpočet kondičních bodů, které slouží jako životy a únava hráče">
+				<sum>
+					<value id="odl"/>
+				</sum>
+			</stat>
+			<stat id="">
+			</stat>
+		</statgroup>
+	</stats>
+	<races>
+	</races>
+	<skills>
+	<!-- Později vytvořím příklad -->
+		<skill id="sklil_author" name="Odhaz na webovku">
+		<![CDATA[Jakýkoliv popis v html <a href="www.facebook.com/DeznekCZ">a odkaz na stránky</a>]]>
+		</skill>
+	</skills>
+	<weapons>
+		<weapon id="small_axe">
+			<!-- 1H = 1-ruční -->
+			<!-- F = využívá stejnou ruku -->
+			
+			<!-- slash_damage = sečné zranění -->
+			<!-- piercing_damage = bodné zranění -->
+			<!-- blunt_damage = drtivé zranění -->
+			
+			<!-- dále napsaná zbraň slouží jako příklad, je nutno je opravit -->
+			
+			<f2f name="lehká sekera" 
+				skill="weapon.sekery" hand="1H" strength="3" length="0"
+				attack="2" slash_damage="3" blunt_damage="1"/>
+			<ranged name="lehká vrhací sekera" 
+				skill="weapon.vrhaci" hand="1HF" strength="3" strength_loading="3"
+				attack="2" slash_damage="3" blunt_damage="3" distance="17"/>
+			<defense name="lehká sekera" 
+				skill="weapon.sekery" hand="1HF" strength="3"
+				defense="2"/>
+		</weapon>
+	</weapons>
+	<armors>
+	</armors>
+	<items>
+	</items>
+</module>
