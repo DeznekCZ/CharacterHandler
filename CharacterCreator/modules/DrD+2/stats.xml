@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module id="drd+2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="database.xsd">
+  <stats>
+    <stats_group id="main" name="Hlavní vlastnosti">
+      <stat id="sil" name="síla" desc="Vyjadřuje sílu hrdiny" />
+      <stat id="obr" name="obratnost" desc="Vyjadřuje obratnost hrdiny" />
+      <stat id="zrc" name="zručnost" desc="Vyjadřuje zručnost hrdiny" />
+      <stat id="vol" name="vůle" desc="Vyjadřuje vůli hrdiny" />
+      <stat id="int" name="inteligence" desc="Vyjadřuje inteligenci hrdiny" />
+      <stat id="chr" name="charisma" desc="Vyjadřuje charismu hrdiny" />
+    </stats_group>
+    <stats_group id="ext" name="Odvozené vlastnosti">
+      <stat id="odl" name="odolnost" desc="Vyjadřuje odolnost hrdiny vůči okolním vlivům (př. počasí)">
+        <value ref="main.sil" />
+      </stat>
+      <stat id="kon" name="kondice"
+        desc="Kondice vyjadřuje hrdinovu schonost vydržet vyšší silové či magické vypětí.">
+        <sum increment="5">
+          <value ref="main.odl" />
+          <value ref="main.vol" />
+        </sum>
+      </stat>
+      <stat id="moc" name="moc" desc="Vyjadřuje moc hrdiny\nPoužívá se pro určení síly kouzla.">
+        <value ref="main.vol"/>
+      </stat>
+      <stat id="sms" name="smysly" desc="Smysly vyjadřují shopnost vnímat okolí">
+        <value ref="main.zrc"/>
+      </stat>
+    </stats_group>
+    <stats_group id="vzl" name="Vzhledové charakteristiky">
+      <stat id="krs" name="krása" desc="">
+        <sum>
+          <sum divideUp="2">
+            <value ref="main.obr"/>
+            <value ref="main.zrc"/>
+          </sum>
+          <value ref="main.chr" divideUp="2"/>
+        </sum>
+      </stat>
+      <stat id="dst" name="důstojnost" desc="">
+        <sum>
+          <sum divideUp="2">
+            <value ref="main.int"/>
+            <value ref="main.vol"/>
+          </sum>
+          <value ref="main.chr" divideUp="2"/>
+        </sum>
+      </stat>
+      <stat id="neb" name="nebezpečnost" desc="">
+        <sum>
+          <sum divideUp="2">
+            <value ref="main.sil"/>
+            <value ref="main.vol"/>
+          </sum>
+          <value ref="main.chr" divideUp="2"/>
+        </sum>
+      </stat>
+    </stats_group>
+    <stats_group id="inc" name="Iniciativa">
+      <stat id="f2f" name="útok z blízka" desc="">
+        <value ref="main.obr"/>
+      </stat>
+      <stat id="ranged" name="střelba" desc="">
+        <sum divideUp="2">
+          <value ref="main.obr"/>
+          <value ref="main.zrc"/>
+        </sum>
+      </stat>
+      <stat id="magic" name="kouzlení" desc="">
+        <sum divideUp="2">
+          <value ref="main.obr"/>
+          <value ref="main.int"/>
+        </sum>
+      </stat>
+    </stats_group>
+    <stats_group id="boj" name="Boj">
+      <stat id="f2f" name="útok z blízka" desc="">
+        <value ref="main.obr" divideDown="2"/>
+      </stat>
+      <stat id="ranged" name="střelba" desc="">
+        <value ref="main.zrc" divideUp="2"/>
+      </stat>
+      <stat id="magic" name="kouzlení" desc="">
+        <value ref="main.int"/>
+      </stat>
+      <stat id="def" name="obrana" desc="">
+        <value ref="main.int" divideUp="2"/>
+      </stat>
+    </stats_group>
+  </stats>
+</module>
