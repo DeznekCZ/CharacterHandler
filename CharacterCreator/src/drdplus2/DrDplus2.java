@@ -1,13 +1,33 @@
 package drdplus2;
 
+import java.io.File;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.ResourceBundle;
 
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathFactory;
+
+import org.w3c.dom.Node;
+
+import core.ILoader;
+import core.Module;
 import core.ModuleLoader;
+import core.ModuleLoaderException;
 import core.Statistic;
+import core.StatisticGroup;
+import cz.deznekcz.util.ITryDo;
+import cz.deznekcz.util.xml.XMLLoader;
+import cz.deznekcz.util.xml.XMLStepper;
+import cz.deznekcz.util.xml.XMLStepper.Step;
+import cz.deznekcz.util.xml.XMLStepper.StepDocument;
+import cz.deznekcz.util.xml.XMLStepper.StepList;
 import javafx.collections.ListChangeListener.Change;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.util.Pair;
 
 public class DrDplus2 extends ModuleLoader<Race, Sex> implements Initializable {
 
@@ -19,10 +39,10 @@ public class DrDplus2 extends ModuleLoader<Race, Sex> implements Initializable {
 		INSTANCE = this;
 	}
 	
-	public static final String name = "DrD+2";
+	private static final String MODULE = "DrD+2";
 	
 	public static Scene load() {
-		return load(name);
+		return load(MODULE);
 	}
 	
 	static {
@@ -30,65 +50,6 @@ public class DrDplus2 extends ModuleLoader<Race, Sex> implements Initializable {
 		Sex.INIT();
 		Skill.INIT();
 	}
-	
-	Statistic sila = Statistic.init("síla", Race.sila);
-	Statistic obratnost = Statistic.init("obratnost", Race.obratnost);
-	Statistic zrucnost = Statistic.init("zruènost", Race.zrucnost);
-	Statistic vule = Statistic.init("vùle", Race.vule);
-	Statistic inteligence = Statistic.init("inteligence", Race.inteligence);
-	Statistic charisma = Statistic.init("charisma", Race.charisma);
-	
-	Statistic odolnost = Statistic.init("odolnost", sila, Race.odolnost)
-			.description("Urèuje schopnost odolání vùži jedùm."
-					+ "\n= síla");
-	Statistic kondice = Statistic.init(5, odolnost, vule).maximal("kondice", 10)
-			.description("Urèuje velikost zdraví a únavy, snižuje ji nošení zbrojí."
-					+ "\n= odolnost + vùle + 5 (minimum 10)");
-	Statistic moc = Statistic.init("moc", vule)
-			.description("Urèuje maximální velikost kouzel, kterou mùže kouzlící postava seslat."
-					+ "\n= vùle");
-	Statistic smysly = Statistic.init("smysly", zrucnost, Race.smysly)
-			.description("Používá se pro hledání a rychlé reakce na okolní prostøedí."
-					+ "\n= zruènost");
-
-	Statistic vzhled_nebezpecnost = Statistic.init("nebezpeènost", 
-			Statistic.init(sila, vule).divideDown(2), charisma.divideDown(2)
-			)
-			.description("Tento bonus urèuje jak postava vypadá nebezpeènì."
-					+ "\n= (sila + vùle) / 2 + charisma / 2");
-	Statistic vzhled_krasa = Statistic.init("krása", 
-			Statistic.init(zrucnost, obratnost).divideDown(2), charisma.divideDown(2)
-			)
-			.description("Tento bonus urèuje jak postava vypadá krásnì."
-					+ "\n= (zruènost + obratnost) / 2 + charisma / 2");
-	Statistic vzhled_dustojnost = Statistic.init("dùstojnost", 
-			Statistic.init(vule, inteligence).divideDown(2), charisma.divideDown(2)
-			)
-			.description("Tento bonus urèuje jak postava vypadá dùstojnì."
-					+ "\n= (vùle + inteligence) / 2 + charisma / 2");
-
-	Statistic iniciativa_ftf = Statistic.init("boj z blízka", obratnost, Race.iniciativa)
-			.description("Tento bonus se pøièítá k délce zbranì pro boj zblízka."
-					+ "\n= obratnost");
-	Statistic iniciativa_ranged = Statistic.init("støelba", Statistic.init(obratnost, zrucnost).divideDown(2), Race.iniciativa)
-			.description("Tento bonus urèuje iniciativu v pøípadì støelby èi vrhu."
-					+ "\n= (obratnost + zruènost) / 2 (zaokrouhleno dolu)");
-	Statistic iniciativa_magic = Statistic.init("sesílání", Statistic.init(obratnost, inteligence).divideDown(2), Race.iniciativa)
-			.description("Tento bonus urèuje iniciativu v pøípadì sesílání kouzel."
-					+ "\n= (obratnost + inteligence) / 2 (zaokrouhleno dolu)");
-
-	Statistic boj_ftf = obratnost.divideDown("boj z blízka", 2)
-			.description("Tento bonus se pøièítá k útoènosti zbranì pro boj zblízka."
-					+ "\n= obratnost / 2 (zaokrouhleno dolu)");
-	Statistic boj_ranged = obratnost.divideDown("støelba", 2)
-			.description("Tento bonus se pøièítá k útoènosti zbranì pro støelnu nebo vrh."
-					+ "\n= zruènost / 2 (zaokrouhleno dolu)");
-	Statistic boj_def = Statistic.init("obrana", 5, obratnost.divideUp("/2", 2))
-			.description("Tento bonus se urèuje pasivní obranu, pøièítá se k obranì zbraní."
-					+ "\n= obratnost / 2 (zaokrouhleno nahoru)");
-	Statistic boj_magic = Statistic.init("sesílání", inteligence)
-			.description("Urèuje velikost bonusu pro sesílání kouzel."
-					+ "\n= inteligence");
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -106,23 +67,53 @@ public class DrDplus2 extends ModuleLoader<Race, Sex> implements Initializable {
 		sexChoice.getSelectionModel().select(Sex.MALE);
 		Sex.sex.bind(sexChoice.getSelectionModel().selectedItemProperty());
 		
-		health(3, Life.init(kondice));
+		health(3, Statistic.table1(Tables::LIFE, kondice));
 		
 		// Character definition
+
+		Module module = new Module("DrD+2");
+		Queue<Pair<Statistic, Step>> lateConstruct = new LinkedList<Pair<Statistic, Step>>();
 		
-		groupStats(primalStats, "Hlavní vlastnosti", sila, obratnost, zrucnost, vule, inteligence, charisma);
-		groupStats(primalStats, "Odvozené vlastnosti", odolnost, kondice, moc, smysly);
-		groupStats(primalStats, "Vzhled", vzhled_krasa, vzhled_dustojnost, vzhled_nebezpecnost);
-		groupStats(primalStats, "Iniciativa", iniciativa_ftf, iniciativa_ranged, iniciativa_magic);
-		groupStats(primalStats, "Boj", boj_ftf, boj_ranged, boj_def, boj_magic);
+		Exception e = ITryDo.checkValue(() -> {
+			for (String file : Arrays.asList("stats")) {
+				Node root = XMLLoader.load(new File("modules/" + MODULE + "/" + file + ".xml"));
+				StepDocument stepDocument = XMLStepper.from(root.getOwnerDocument());
+
+				StepList stepList = stepDocument.getList("module/stats/stats_group");
+				if (stepList != null)
+				{
+					stepList.foreach(XMLStepper::hasAttribute, (step) -> {
+						StatisticGroup group = new StatisticGroup(module, step.attribute("id"), step.attribute("name"));
+						
+						step.getList("stat").foreach(XMLStepper::hasAttribute, (statStep) -> {
+							Statistic stat = new Statistic(group, statStep.attribute("id"), statStep.attribute("name"));
+							lateConstruct.add(new Pair<Statistic, XMLStepper.Step>(stat, statStep));
+						});
+					});
+				}
+			}
+		
+			for (Pair<Statistic, Step> iLoader : lateConstruct) {
+				iLoader.getKey().loadBuild(module, iLoader.getValue());
+			}
+		});
+		if (e != null) {
+			throw new ModuleLoaderException(String.format("Module with name =\"%s\" has issues!\n%s", MODULE, e.getLocalizedMessage()));
+		}
+		
+		groupStats(primalStats, module.getGroup("main"));
+		groupStats(primalStats, module.getGroup("ext"));
+		groupStats(primalStats, module.getGroup("vzl"));
+		groupStats(primalStats, module.getGroup("inc"));
+		groupStats(primalStats, module.getGroup("boj"));
 
 		raceChoice.getSelectionModel().select(Race.DWARF);
-		sila.addIncrement(1);
-		sila.addIncrement(3);
-		obratnost.addIncrement(1);
-		vule.addIncrement(1);
-		inteligence.addIncrement(1);
-		moc.addIncrement(3);
+		module.getStatistic("main.sil").addIncrement(1);
+		module.getStatistic("main.sil").addIncrement(3);
+		module.getStatistic("main.obr").addIncrement(1);
+		module.getStatistic("main.vol").addIncrement(1);
+		module.getStatistic("main.int").addIncrement(1);
+		module.getStatistic("ext.moc").addIncrement(3);
 
 		characterName.setText("Torwald de Tureda");
 		characterHistory.setText("Rodné mìsto: Uthork"

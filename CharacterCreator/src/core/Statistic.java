@@ -1,7 +1,12 @@
 package core;
 
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
+import cz.deznekcz.util.xml.XMLStepper.Step;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.beans.binding.IntegerExpression;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -10,7 +15,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 
-public class Statistic implements InvalidationListener {
+public class Statistic implements InvalidationListener, ILoader<Statistic> {
 
 
 	private ObservableList<Statistic> sumBounds = FXCollections.observableArrayList();
@@ -25,12 +30,26 @@ public class Statistic implements InvalidationListener {
 	private SimpleIntegerProperty value = new SimpleIntegerProperty();
 	private StringBinding valueAsString;
 	
-	protected Statistic(String name) {
+	private String id;
+
+
+	private StatisticGroup group;
+
+
+	private static int index;
+
+	public Statistic(StatisticGroup group, String id, String name) {
+		this.group = group;
+		group.addStatistic(id, this);
+		this.id = id;
 		this.name.set(name);
-		value.set(0);
-		sumBounds.addListener(this);
 	}
 
+
+	public Statistic(String internalName) {
+		this.id = "GENERATED " + (index ++);
+		this.name.set(internalName);
+	}
 
 	private boolean dividedUp = false;
 	private int divider = 0;
@@ -191,5 +210,37 @@ public class Statistic implements InvalidationListener {
 
 	public Statistic addIncrement(int i) {
 		return addIncrement(Statistic.constant(i));
+	}
+
+	public static Statistic table1(String name, Function<Integer, Integer> function, Statistic statistic) {
+		Statistic new_statistic = new Statistic(name);
+		statistic.value.addListener((o,l,n) -> {
+			new_statistic.value.set(function.apply(n.intValue()));
+		});
+		return new_statistic;
+	}
+
+	public static Statistic table1(Function<Integer, Integer> function, Statistic statistics) {
+		return table1("TABLE1", function, statistics);
+	}
+
+	public static Statistic table2(String name, BiFunction<Integer, Integer, Integer> function, Statistic statistic1, Statistic statistic2) {
+		Statistic new_statistic = new Statistic(name);
+		InvalidationListener listener = (o) -> {
+			new_statistic.value.set(function.apply(statistic1.value.get(),statistic2.value.get()));
+		};
+		statistic1.value.addListener(listener);
+		statistic2.value.addListener(listener);
+		return new_statistic;
+	}
+
+	public static Statistic table2(BiFunction<Integer, Integer, Integer> function, Statistic statistics1, Statistic statistic2) {
+		return table2("TABLE2", function, statistics1, statistic2);
+	}
+
+
+	@Override
+	public void loadBuild(Module module, Step node) {
+		
 	}
 }

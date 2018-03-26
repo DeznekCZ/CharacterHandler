@@ -20,7 +20,7 @@
       </kind>
     </race>
     <race id="elven" name="elf">
-      <kind id="man" name="elf">
+      <kind id="elven" name="elf">
         <bonus ref="main.sil" increase="-1"/>
         <bonus ref="main.obr" increase="+1"/>
         <bonus ref="main.zrc" increase="+1"/>
@@ -29,7 +29,7 @@
         <bonus ref="main.chr" increase="+1"/>
         <bonus ref="ext.odl"  increase="-1"/>
       </kind>
-      <kind id="woman" name="elfka">
+      <kind id="she-elven" name="elfka">
         <bonus ref="main.sil" increase="-2"/>
         <bonus ref="main.obr" increase="+1"/>
         <bonus ref="main.zrc" increase="+2"/>
@@ -37,19 +37,19 @@
         <bonus ref="main.chr" increase="+2"/>
         <bonus ref="ext.odl"  increase="-1"/>
       </kind>
-      <kind id="man" name="temný elf">
+      <kind id="dark-elven" name="temný elf">
         <bonus ref="main.int" increase="+1"/>
         <bonus ref="ext.odl"  increase="-1"/>
         <skill ref="race.infravideni" lvl="1"/>
       </kind>
-      <kind id="woman" name="temná elfka">
+      <kind id="she-dark-elven" name="temná elfka">
         <bonus ref="main.sil" increase="-1"/>
         <bonus ref="main.zrc" increase="+1"/>
         <bonus ref="main.chr" increase="+1"/>
         <bonus ref="ext.odl"  increase="-1"/>
         <skill ref="race.infravideni" lvl="1"/>
       </kind>
-      <kind id="man" name="zelený elf">
+      <kind id="forest-elven" name="zelený elf">
         <bonus ref="main.sil" increase="-1"/>
         <bonus ref="main.obr" increase="+2"/>
         <bonus ref="main.vol" increase="-1"/>
@@ -57,7 +57,7 @@
         <bonus ref="main.chr" increase="+1"/>
         <bonus ref="ext.odl"  increase="-1"/>
       </kind>
-      <kind id="woman" name="zelená elfka">
+      <kind id="she-forest-elven" name="zelená elfka">
         <bonus ref="main.sil" increase="-2"/>
         <bonus ref="main.obr" increase="+2"/>
         <bonus ref="main.zrc" increase="+1"/>

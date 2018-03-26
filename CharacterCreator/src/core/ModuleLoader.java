@@ -100,15 +100,15 @@ public class ModuleLoader<cRace, cSex> {
 				);
 	}
 
-	protected void groupStats(GridPane root, String name, Statistic...statistics) {
+	protected void groupStats(GridPane root, StatisticGroup statGroup) {
 		GridPane grid = new GridPane();
-		TitledPane pane = new TitledPane(name, grid);
+		TitledPane pane = new TitledPane(statGroup.getName(), grid);
 		GridPane.setColumnSpan(pane, 2);
 		primalStats.addRow(statCounter++, pane);
-		for (int i = 0; i < statistics.length; i++) {
-			stat(grid, statistics[i], i);
+		int i = 0;
+		for (Statistic statistic : statGroup.getStatisticsAsList()) {
+			stat(grid, statistic, i++);
 		}
-		
 	}
 
 	protected void stat(GridPane pane, Statistic statistic, int index) {
