@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module id="drd+2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="database.xsd">
+	<weapons>
+		<main_hand name="hlavní ruka" initial="hand" >
+			<initiative_f2f ref="f2f_inc_main" name="standartní držení" limited="1H/2H"/>
+			<initiative_f2f ref="f2f_inc_booth" name="obouruční držení" limited="1H"/>
+			<initiative_ranged ref="ranged_inc_main" name="střeba jednou rukou" limited="1H"/>
+			<initiative_ranged ref="ranged_inc_booth" name="střeba oběma rukami" limited="2H"/>
+		</main_hand>
+		<off_hand id="off" name="vedlejší ruka" initial="hand" >
+			<initiative_f2f ref="f2f_inc_off"/>
+			<initiative_ranged ref="ranged_inc_off" name="střeba slabší rukou" limited="1H"/>
+		</off_hand>
+		<!-- Posible more hands declared like
+
+		<hand id="third_hand" name="third hand" initial="turret">
+			<initiative_f2f ref="f2f_inc_main" name="boj jednou rukou"/>
+		</hand>
+		 -->
+		<f2f_inc_main>
+			<sum>
+				<value ref="stat.inc.f2f" />
+				<sum max="0" const="-3">
+					<value ref="skill[hand.main.weapon.f2f.skill.id].level" />
+				</sum>
+				<sum max="0">
+					<value ref="hand.main.weapon.ranged.strength" multiple="-1" />
+					<value ref="stat.main.sil" />
+				</sum>
+			</sum>
+		</f2f_inc_main>
+		<f2f_attack_main>
+			<sum>
+				<value ref="stat.boj.f2f" />
+				<!-- Min ( 0, ( -2 + skill_level_needed_for_weapon ) ) -->
+				<sum max="0" const="-2">
+					<value ref="skill[hand.main.weapon.f2f.skill.id].level" />
+				</sum>
+				<!-- Min ( 0, ( 1 + strength - needed_strength ) ) -->
+				<sum max="0" const="1">
+					<value ref="hand.main.weapon.f2f.strength" multiple="-1" />
+					<value ref="stat.main.sil" />
+				</sum>
+			</sum>
+		</f2f_attack_main>
+		<f2f_inc_off>
+			<sum>
+				<value ref="stat.inc.f2f" />
+				<sum max="0" const="-3">
+					<value ref="skill[hand.main.weapon.f2f.skill.id].level" />
+				</sum>
+				<sum max="0" const="-3">
+					<value ref="hand.main.weapon.ranged.strength" multiple="-1" />
+					<value ref="stat.main.sil" />
+				</sum>
+			</sum>
+		</f2f_inc_off>
+		<f2f_attack_off>
+			<sum>
+				<value ref="stat.boj.f2f" />
+				<!-- Min ( 0, ( -2 + skill_level_needed_for_weapon ) ) -->
+				<sum max="0" const="-2">
+					<value ref="skill[hand.main.weapon.f2f.skill.id].level" />
+				</sum>
+				<!-- Min ( 0, ( 1 + strength - needed_strength ) ) -->
+				<sum max="0" const="1">
+					<value ref="hand.main.weapon.f2f.strength" multiple="-1" />
+					<value ref="stat.main.sil" />
+				</sum>
+			</sum>
+		</f2f_attack_off>
+		<f2f_inc_booth>
+			<sum>
+				<value ref="stat.inc.f2f" />
+				<sum max="0" const="-3">
+					<value ref="skill[hand.main.weapon.f2f.skill.id].level" />
+				</sum>
+				<sum max="0" const="-1">
+					<value ref="hand.main.weapon.ranged.strength" multiple="-1" />
+					<value ref="stat.main.sil" />
+				</sum>
+			</sum>
+		</f2f_inc_booth>
+		<f2f_attack_booth>
+			<sum>
+				<value ref="stat.boj.f2f" />
+				<!-- Min ( 0, ( -2 + skill_level_needed_for_weapon ) ) -->
+				<sum max="0" const="-2">
+					<value ref="skill[hand.main.weapon.f2f.skill.id].level" />
+				</sum>
+				<!-- Min ( 0, ( 1 + strength - needed_strength ) ) -->
+				<sum max="0" const="3">
+					<value ref="hand.main.weapon.f2f.strength" multiple="-1" />
+					<value ref="stat.main.sil" />
+				</sum>
+			</sum>
+		</f2f_attack_booth>
+		<ranged_inc_main>
+			<sum>
+				<value ref="stat.inc.ranged" />
+				<sum max="0" const="-3">
+					<value ref="skill[hand.main.weapon.ranged.skill.id].level" />
+				</sum>
+				<sum max="0">
+					<value ref="hand.main.weapon.ranged.strength_loading" multiple="-1" />
+					<value ref="stat.main.sil" />
+				</sum>
+			</sum>
+		</ranged_inc_main>
+		<ranged_inc_off>
+			<sum>
+				<value ref="stat.inc.ranged" />
+				<sum max="0" const="-3">
+					<value ref="skill[hand.main.weapon.ranged.skill.id].level" />
+				</sum>
+				<sum max="0" const="-1">
+					<value ref="hand.main.weapon.ranged.strength_loading" multiple="-1" />
+					<value ref="stat.main.sil" />
+				</sum>
+			</sum>
+		</ranged_inc_off>
+		<ranged_inc_booth>
+			<sum>
+				<value ref="stat.inc.ranged" />
+				<sum max="0" const="-3">
+					<value ref="skill[hand.main.weapon.ranged.skill.id].level" />
+				</sum>
+				<sum max="0">
+					<value ref="hand.main.weapon.ranged.strength_loading" multiple="-1" />
+					<value ref="stat.main.sil" />
+				</sum>
+			</sum>
+		</ranged_inc_booth>
+		<ranged_attack_main>
+			<sum>
+				<value ref="stat.boj.ranged" />
+				<sum max="0" const="-2">
+					<value ref="skill[hand.main.weapon.ranged.skill.id].level" />
+				</sum>
+				<sum max="0" const="1">
+					<value ref="hand.main.weapon.ranged.strength_loading" multiple="-1" />
+					<value ref="stat.main.sil" />
+				</sum>
+			</sum>
+		</ranged_attack_main>
+		<ranged_attack_booth>
+			<sum>
+				<value ref="stat.boj.ranged" />
+				<sum max="0" const="-2">
+					<value ref="skill[hand.main.weapon.ranged.skill.id].level" />
+				</sum>
+				<sum max="0" const="1">
+					<value ref="hand.main.weapon.ranged.strength_loading" multiple="-1" />
+					<value ref="stat.main.sil" />
+				</sum>
+			</sum>
+		</ranged_attack_booth>
+		<ranged_attack_off>
+			<sum>
+				<value ref="stat.boj.ranged" />
+				<sum max="0" const="-2">
+					<value ref="skill[hand.main.weapon.ranged.skill.id].level" />
+				</sum>
+				<sum max="0" const="-1">
+					<value ref="hand.main.weapon.ranged.strength_loading" multiple="-1" />
+					<value ref="stat.main.sil" />
+				</sum>
+			</sum>
+		</ranged_attack_off>
+		<defense_off>
+			<sum>
+				<value ref="stat.boj.def" />
+				<sum max="0" const="-2">
+					<value ref="skill[hand.main.weapon.defense.skill.id].level" />
+				</sum>
+				<sum max="0" const="1">
+					<value ref="hand.main.weapon.ranged.strength" multiple="-1" />
+					<value ref="stat.main.sil" />
+				</sum>
+			</sum>
+		</defense_off>
+	</weapons>
+</module>

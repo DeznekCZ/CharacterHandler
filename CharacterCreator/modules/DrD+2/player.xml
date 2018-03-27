@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module id="drd+2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="database.xsd">
+	<player id="torwald" name="Torwald de Tureda">
+		<race ref="dwarf" />
+		<kind ref="dwarf" />
+		<stat ref="main.sil" increment="1" />
+		<stat ref="main.obr" increment="1" />
+		<stat ref="main.vol" increment="1" />
+		<stat ref="main.int" increment="1" />
+
+		<!-- Learned skills -->
+		<skill ref="weapon.palice_kyje" level="3" />
+
+		<!-- Owned items -->
+		<item ref="#" name="Trpasličí rodové kladivo de Tureda" history="">
+			<!-- Data required, no ref available -->
+			<data weight="#weapon.mace.weight"/>
+			<weapon ref="mace"/>
+		</item>
+		<item ref="#" name="Kroužková zbroj" history="">
+			<!-- Data required, no ref available -->
+			<data weight="#armor.chainmail.weight"/>
+			<weapon ref="mace"/>
+		</item>
+	</player>
+</module>
