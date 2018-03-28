@@ -39,16 +39,18 @@ public class Statistic implements InvalidationListener, ILoader<Statistic> {
 	private static int index;
 
 	public Statistic(StatisticGroup group, String id, String name) {
+		if (group != StatisticGroup.GLOBAL)
+			group.addStatistic(id, this);
 		this.group = group;
-		group.addStatistic(id, this);
 		this.id = id;
 		this.name.set(name);
+		
+		sumBounds.addListener(this);
 	}
 
 
 	public Statistic(String internalName) {
-		this.id = "GENERATED " + (index ++);
-		this.name.set(internalName);
+		this(StatisticGroup.GLOBAL, "GENERATED " + (index++), internalName);
 	}
 
 	private boolean dividedUp = false;
@@ -101,6 +103,11 @@ public class Statistic implements InvalidationListener, ILoader<Statistic> {
 	private int division(int arg_dValue) {
 		return ( arg_dValue % divider ) == 0 ? arg_dValue / divider
 				: ( dividedUp ? arg_dValue / divider + 1 : arg_dValue / divider );
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("Stat(%s,%s)", id, name.get());
 	}
 
 	@Override

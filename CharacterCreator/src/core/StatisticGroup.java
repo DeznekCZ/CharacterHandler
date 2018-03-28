@@ -6,6 +6,9 @@ import java.util.List;
 
 public class StatisticGroup {
 
+	public static final StatisticGroup GLOBAL = new StatisticGroup(Module.GLOBAL, "GLOBAL_GROUP", "Generated Statistics");
+	
+	
 	private List<Statistic> list = new ArrayList<Statistic>();
 	private HashMap<String, Statistic> statistics = new HashMap<>();
 	private String id;

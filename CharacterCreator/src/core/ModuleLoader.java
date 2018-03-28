@@ -4,9 +4,15 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.acl.LastOwnerException;
+import java.util.Queue;
 import java.util.ResourceBundle;
 
 import core.javafx.Binder;
+import cz.deznekcz.util.xml.XMLStepper;
+import cz.deznekcz.util.xml.XMLStepper.Step;
+import cz.deznekcz.util.xml.XMLStepper.StepDocument;
+import cz.deznekcz.util.xml.XMLStepper.StepList;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.binding.StringBinding;
@@ -34,6 +40,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
+import javafx.util.Pair;
 import javafx.util.converter.IntegerStringConverter;
 
 public class ModuleLoader<cRace, cSex> {
@@ -143,6 +150,37 @@ public class ModuleLoader<cRace, cSex> {
 	protected void removeLevel(ActionEvent event)
 	{
 		characterLevel.setValue(characterLevel.getValue() - 1);
+	}
+
+	public static void loadStatistics(StepDocument stepDocument, Module module, Queue<Pair<ILoader<?>, Step>> lateConstruct) {
+		StepList stepList = stepDocument.getList("module/stats/stats_group");
+		if (stepList != null)
+		{
+			stepList.foreach(XMLStepper::hasAttribute, (step) -> {
+				StatisticGroup group = new StatisticGroup(module, step.attribute("id"), step.attribute("name"));
+				
+				step.getList("stat").foreach(XMLStepper::hasAttribute, (statStep) -> {
+					Statistic stat = new Statistic(group, statStep.attribute("id"), statStep.attribute("name"));
+					stat.description(statStep.attribute("desc"));
+					lateConstruct.add(new Pair<ILoader<?>, XMLStepper.Step>(stat, statStep));
+				});
+			});
+		}
+	}
+
+	public static void loadRaces(StepDocument stepDocument, Module module, Queue<Pair<ILoader<?>, Step>> lateConstruct) {
+		StepList stepList = stepDocument.getList("module/stats/stats_group");
+		if (stepList != null)
+		{
+			stepList.foreach(XMLStepper::hasAttribute, (step) -> {
+				StatisticGroup group = new StatisticGroup(module, step.attribute("id"), step.attribute("name"));
+				
+				step.getList("stat").foreach(XMLStepper::hasAttribute, (statStep) -> {
+					Statistic stat = new Statistic(group, statStep.attribute("id"), statStep.attribute("name"));
+					lateConstruct.add(new Pair<ILoader<?>, XMLStepper.Step>(stat, statStep));
+				});
+			});
+		}
 	}
 
 }

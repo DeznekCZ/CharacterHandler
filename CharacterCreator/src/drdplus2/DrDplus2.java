@@ -67,33 +67,20 @@ public class DrDplus2 extends ModuleLoader<Race, Sex> implements Initializable {
 		sexChoice.getSelectionModel().select(Sex.MALE);
 		Sex.sex.bind(sexChoice.getSelectionModel().selectedItemProperty());
 		
-		health(3, Statistic.table1(Tables::LIFE, kondice));
-		
 		// Character definition
 
 		Module module = new Module("DrD+2");
-		Queue<Pair<Statistic, Step>> lateConstruct = new LinkedList<Pair<Statistic, Step>>();
+		Queue<Pair<ILoader<?>, Step>> lateConstruct = new LinkedList<Pair<ILoader<?>, Step>>();
 		
 		Exception e = ITryDo.checkValue(() -> {
 			for (String file : Arrays.asList("stats")) {
 				Node root = XMLLoader.load(new File("modules/" + MODULE + "/" + file + ".xml"));
 				StepDocument stepDocument = XMLStepper.from(root.getOwnerDocument());
 
-				StepList stepList = stepDocument.getList("module/stats/stats_group");
-				if (stepList != null)
-				{
-					stepList.foreach(XMLStepper::hasAttribute, (step) -> {
-						StatisticGroup group = new StatisticGroup(module, step.attribute("id"), step.attribute("name"));
-						
-						step.getList("stat").foreach(XMLStepper::hasAttribute, (statStep) -> {
-							Statistic stat = new Statistic(group, statStep.attribute("id"), statStep.attribute("name"));
-							lateConstruct.add(new Pair<Statistic, XMLStepper.Step>(stat, statStep));
-						});
-					});
-				}
+				ModuleLoader.loadStatistics(stepDocument, module, lateConstruct);
 			}
 		
-			for (Pair<Statistic, Step> iLoader : lateConstruct) {
+			for (Pair<ILoader<?>, Step> iLoader : lateConstruct) {
 				iLoader.getKey().loadBuild(module, iLoader.getValue());
 			}
 		});
@@ -106,13 +93,18 @@ public class DrDplus2 extends ModuleLoader<Race, Sex> implements Initializable {
 		groupStats(primalStats, module.getGroup("vzl"));
 		groupStats(primalStats, module.getGroup("inc"));
 		groupStats(primalStats, module.getGroup("boj"));
-
-		raceChoice.getSelectionModel().select(Race.DWARF);
+		
+		health(3, Statistic.table1(Tables::LIFE, module.getStatistic("ext.kon")));
+		
+		
+		
 		module.getStatistic("main.sil").addIncrement(1);
-		module.getStatistic("main.sil").addIncrement(3);
 		module.getStatistic("main.obr").addIncrement(1);
 		module.getStatistic("main.vol").addIncrement(1);
 		module.getStatistic("main.int").addIncrement(1);
+		
+		// from skills
+		module.getStatistic("main.sil").addIncrement(3);
 		module.getStatistic("ext.moc").addIncrement(3);
 
 		characterName.setText("Torwald de Tureda");

@@ -22,10 +22,10 @@
 			<sum>
 				<value ref="stat.inc.f2f" />
 				<sum max="0" const="-3">
-					<value ref="skill[hand.main.weapon.f2f.skill.id].level" />
+					<value ref="skill[#weapon.f2f.skill.id].level" />
 				</sum>
 				<sum max="0">
-					<value ref="hand.main.weapon.ranged.strength" multiple="-1" />
+					<value ref="#weapon.ranged.strength" multiple="-1" />
 					<value ref="stat.main.sil" />
 				</sum>
 			</sum>
@@ -35,11 +35,11 @@
 				<value ref="stat.boj.f2f" />
 				<!-- Min ( 0, ( -2 + skill_level_needed_for_weapon ) ) -->
 				<sum max="0" const="-2">
-					<value ref="skill[hand.main.weapon.f2f.skill.id].level" />
+					<value ref="skill[#weapon.f2f.skill.id].level" />
 				</sum>
 				<!-- Min ( 0, ( 1 + strength - needed_strength ) ) -->
 				<sum max="0" const="1">
-					<value ref="hand.main.weapon.f2f.strength" multiple="-1" />
+					<value ref="#weapon.f2f.strength" multiple="-1" />
 					<value ref="stat.main.sil" />
 				</sum>
 			</sum>
@@ -48,10 +48,10 @@
 			<sum>
 				<value ref="stat.inc.f2f" />
 				<sum max="0" const="-3">
-					<value ref="skill[hand.main.weapon.f2f.skill.id].level" />
+					<value ref="skill[#weapon.f2f.skill.id].level" />
 				</sum>
 				<sum max="0" const="-3">
-					<value ref="hand.main.weapon.ranged.strength" multiple="-1" />
+					<value ref="#weapon.ranged.strength" multiple="-1" />
 					<value ref="stat.main.sil" />
 				</sum>
 			</sum>
@@ -61,11 +61,11 @@
 				<value ref="stat.boj.f2f" />
 				<!-- Min ( 0, ( -2 + skill_level_needed_for_weapon ) ) -->
 				<sum max="0" const="-2">
-					<value ref="skill[hand.main.weapon.f2f.skill.id].level" />
+					<value ref="skill[#weapon.f2f.skill.id].level" />
 				</sum>
 				<!-- Min ( 0, ( 1 + strength - needed_strength ) ) -->
 				<sum max="0" const="1">
-					<value ref="hand.main.weapon.f2f.strength" multiple="-1" />
+					<value ref="#weapon.f2f.strength" multiple="-1" />
 					<value ref="stat.main.sil" />
 				</sum>
 			</sum>
@@ -74,10 +74,10 @@
 			<sum>
 				<value ref="stat.inc.f2f" />
 				<sum max="0" const="-3">
-					<value ref="skill[hand.main.weapon.f2f.skill.id].level" />
+					<value ref="skill[#weapon.f2f.skill.id].level" />
 				</sum>
 				<sum max="0" const="-1">
-					<value ref="hand.main.weapon.ranged.strength" multiple="-1" />
+					<value ref="#weapon.ranged.strength" multiple="-1" />
 					<value ref="stat.main.sil" />
 				</sum>
 			</sum>
@@ -87,11 +87,11 @@
 				<value ref="stat.boj.f2f" />
 				<!-- Min ( 0, ( -2 + skill_level_needed_for_weapon ) ) -->
 				<sum max="0" const="-2">
-					<value ref="skill[hand.main.weapon.f2f.skill.id].level" />
+					<value ref="skill[#weapon.f2f.skill.id].level" />
 				</sum>
 				<!-- Min ( 0, ( 1 + strength - needed_strength ) ) -->
 				<sum max="0" const="3">
-					<value ref="hand.main.weapon.f2f.strength" multiple="-1" />
+					<value ref="#weapon.f2f.strength" multiple="-1" />
 					<value ref="stat.main.sil" />
 				</sum>
 			</sum>
@@ -100,10 +100,10 @@
 			<sum>
 				<value ref="stat.inc.ranged" />
 				<sum max="0" const="-3">
-					<value ref="skill[hand.main.weapon.ranged.skill.id].level" />
+					<value ref="skill[#weapon.ranged.skill.id].level" />
 				</sum>
 				<sum max="0">
-					<value ref="hand.main.weapon.ranged.strength_loading" multiple="-1" />
+					<value ref="#weapon.ranged.strength_loading" multiple="-1" />
 					<value ref="stat.main.sil" />
 				</sum>
 			</sum>
@@ -112,10 +112,10 @@
 			<sum>
 				<value ref="stat.inc.ranged" />
 				<sum max="0" const="-3">
-					<value ref="skill[hand.main.weapon.ranged.skill.id].level" />
+					<value ref="skill[#weapon.ranged.skill.id].level" />
 				</sum>
 				<sum max="0" const="-1">
-					<value ref="hand.main.weapon.ranged.strength_loading" multiple="-1" />
+					<value ref="#weapon.ranged.strength_loading" multiple="-1" />
 					<value ref="stat.main.sil" />
 				</sum>
 			</sum>
@@ -124,10 +124,10 @@
 			<sum>
 				<value ref="stat.inc.ranged" />
 				<sum max="0" const="-3">
-					<value ref="skill[hand.main.weapon.ranged.skill.id].level" />
+					<value ref="skill[#weapon.ranged.skill.id].level" />
 				</sum>
 				<sum max="0">
-					<value ref="hand.main.weapon.ranged.strength_loading" multiple="-1" />
+					<value ref="#weapon.ranged.strength_loading" multiple="-1" />
 					<value ref="stat.main.sil" />
 				</sum>
 			</sum>
@@ -136,10 +136,10 @@
 			<sum>
 				<value ref="stat.boj.ranged" />
 				<sum max="0" const="-2">
-					<value ref="skill[hand.main.weapon.ranged.skill.id].level" />
+					<value ref="skill[#weapon.ranged.skill.id].level" />
 				</sum>
 				<sum max="0" const="1">
-					<value ref="hand.main.weapon.ranged.strength_loading" multiple="-1" />
+					<value ref="#weapon.ranged.strength_loading" multiple="-1" />
 					<value ref="stat.main.sil" />
 				</sum>
 			</sum>
@@ -148,10 +148,10 @@
 			<sum>
 				<value ref="stat.boj.ranged" />
 				<sum max="0" const="-2">
-					<value ref="skill[hand.main.weapon.ranged.skill.id].level" />
+					<value ref="skill[#weapon.ranged.skill.id].level" />
 				</sum>
 				<sum max="0" const="1">
-					<value ref="hand.main.weapon.ranged.strength_loading" multiple="-1" />
+					<value ref="#weapon.ranged.strength_loading" multiple="-1" />
 					<value ref="stat.main.sil" />
 				</sum>
 			</sum>
@@ -160,10 +160,10 @@
 			<sum>
 				<value ref="stat.boj.ranged" />
 				<sum max="0" const="-2">
-					<value ref="skill[hand.main.weapon.ranged.skill.id].level" />
+					<value ref="skill[#weapon.ranged.skill.id].level" />
 				</sum>
 				<sum max="0" const="-1">
-					<value ref="hand.main.weapon.ranged.strength_loading" multiple="-1" />
+					<value ref="#weapon.ranged.strength_loading" multiple="-1" />
 					<value ref="stat.main.sil" />
 				</sum>
 			</sum>
@@ -172,10 +172,10 @@
 			<sum>
 				<value ref="stat.boj.def" />
 				<sum max="0" const="-2">
-					<value ref="skill[hand.main.weapon.defense.skill.id].level" />
+					<value ref="skill[#weapon.defense.skill.id].level" />
 				</sum>
 				<sum max="0" const="1">
-					<value ref="hand.main.weapon.ranged.strength" multiple="-1" />
+					<value ref="#weapon.ranged.strength" multiple="-1" />
 					<value ref="stat.main.sil" />
 				</sum>
 			</sum>

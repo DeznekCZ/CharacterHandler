@@ -21,9 +21,11 @@ import org.w3c.dom.Node;
 import cz.deznekcz.util.xml.XMLLoader;
 
 public class Module {
-
+	
 	private static List<Module> list = new ArrayList<Module>();
 	private static HashMap<String, Module> modules = new HashMap<>();
+	
+	public static final Module GLOBAL = new Module("GLOBAL_MODULE");
 	
 	private String name;
 	
