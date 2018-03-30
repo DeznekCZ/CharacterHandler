@@ -5,10 +5,16 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.acl.LastOwnerException;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Queue;
 import java.util.ResourceBundle;
 
+import org.w3c.dom.Node;
+
 import core.javafx.Binder;
+import cz.deznekcz.util.ITryDo;
+import cz.deznekcz.util.xml.XMLLoader;
 import cz.deznekcz.util.xml.XMLStepper;
 import cz.deznekcz.util.xml.XMLStepper.Step;
 import cz.deznekcz.util.xml.XMLStepper.StepDocument;
@@ -29,6 +35,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -43,7 +50,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.util.Pair;
 import javafx.util.converter.IntegerStringConverter;
 
-public class ModuleLoader<cRace, cSex> {
+public class ModuleLoader {
 
 	protected static Scene load (String name){
 		Parent root =  new BorderPane();
@@ -67,7 +74,7 @@ public class ModuleLoader<cRace, cSex> {
 	protected VBox healthBar;
 
 	@FXML
-	protected GridPane primalStats;
+	protected Accordion primalStats;
 	protected int statCounter = 1; 
 	
 	@FXML
@@ -85,13 +92,13 @@ public class ModuleLoader<cRace, cSex> {
 	protected TextArea characterHistory;
 	
 	@FXML
-	protected ChoiceBox<cRace> raceChoice;
+	protected ChoiceBox<Race> raceChoice;
 
 	@FXML
-	protected ChoiceBox<cSex> sexChoice;
+	protected ChoiceBox<Kind> sexChoice;
 	
 	public void initialize(URL location, ResourceBundle resources) {
-		characterLevel = new SimpleIntegerProperty(-1);
+		characterLevel = new SimpleIntegerProperty(0);
 		Binder.bidirectional(
 				characterLevel,
 				characterLevelText.textProperty(), 
@@ -107,11 +114,10 @@ public class ModuleLoader<cRace, cSex> {
 				);
 	}
 
-	protected void groupStats(GridPane root, StatisticGroup statGroup) {
+	protected void groupStats(StatisticGroup statGroup) {
 		GridPane grid = new GridPane();
 		TitledPane pane = new TitledPane(statGroup.getName(), grid);
-		GridPane.setColumnSpan(pane, 2);
-		primalStats.addRow(statCounter++, pane);
+		primalStats.getPanes().add(pane);
 		int i = 0;
 		for (Statistic statistic : statGroup.getStatisticsAsList()) {
 			stat(grid, statistic, i++);
@@ -156,10 +162,10 @@ public class ModuleLoader<cRace, cSex> {
 		StepList stepList = stepDocument.getList("module/stats/stats_group");
 		if (stepList != null)
 		{
-			stepList.foreach(XMLStepper::hasAttribute, (step) -> {
-				StatisticGroup group = new StatisticGroup(module, step.attribute("id"), step.attribute("name"));
+			stepList.foreach(XMLStepper::hasAttribute, (groupStep) -> {
+				StatisticGroup group = new StatisticGroup(module, groupStep.attribute("id"), groupStep.attribute("name"));
 				
-				step.getList("stat").foreach(XMLStepper::hasAttribute, (statStep) -> {
+				groupStep.getList("stat").foreach(XMLStepper::hasAttribute, (statStep) -> {
 					Statistic stat = new Statistic(group, statStep.attribute("id"), statStep.attribute("name"));
 					stat.description(statStep.attribute("desc"));
 					lateConstruct.add(new Pair<ILoader<?>, XMLStepper.Step>(stat, statStep));
@@ -169,18 +175,38 @@ public class ModuleLoader<cRace, cSex> {
 	}
 
 	public static void loadRaces(StepDocument stepDocument, Module module, Queue<Pair<ILoader<?>, Step>> lateConstruct) {
-		StepList stepList = stepDocument.getList("module/stats/stats_group");
+		StepList stepList = stepDocument.getList("module/races/race");
 		if (stepList != null)
 		{
-			stepList.foreach(XMLStepper::hasAttribute, (step) -> {
-				StatisticGroup group = new StatisticGroup(module, step.attribute("id"), step.attribute("name"));
+			stepList.foreach(XMLStepper::hasAttribute, (raceStep) -> {
+				Race group = new Race(module, raceStep.attribute("id"), raceStep.attribute("name"));
 				
-				step.getList("stat").foreach(XMLStepper::hasAttribute, (statStep) -> {
-					Statistic stat = new Statistic(group, statStep.attribute("id"), statStep.attribute("name"));
-					lateConstruct.add(new Pair<ILoader<?>, XMLStepper.Step>(stat, statStep));
+				raceStep.getList("kind").foreach(XMLStepper::hasAttribute, (kindStep) -> {
+					Kind kind = new Kind(group, kindStep.attribute("id"), kindStep.attribute("name"));
+					lateConstruct.add(new Pair<ILoader<?>, XMLStepper.Step>(kind, kindStep));
 				});
 			});
 		}
 	}
 
+	protected void loadData(Module module) {
+		Queue<Pair<ILoader<?>, Step>> lateConstruct = new LinkedList<Pair<ILoader<?>, Step>>();
+		
+		Exception e = ITryDo.checkValue(() -> {
+			for (String file : Arrays.asList("stats", "races")) {
+				Node root = XMLLoader.load(new File("modules/" + module.getName() + "/" + file + ".xml"));
+				StepDocument stepDocument = XMLStepper.from(root.getOwnerDocument());
+
+				ModuleLoader.loadStatistics(stepDocument, module, lateConstruct);
+				ModuleLoader.loadRaces(stepDocument, module, lateConstruct);
+			}
+		
+			for (Pair<ILoader<?>, Step> iLoader : lateConstruct) {
+				iLoader.getKey().loadBuild(module, iLoader.getValue());
+			}
+		});
+		if (e != null) {
+			throw new ModuleLoaderException(String.format("Module with name =\"%s\" has issues!\n%s", module.getName(), e.getLocalizedMessage()));
+		}
+	}
 }

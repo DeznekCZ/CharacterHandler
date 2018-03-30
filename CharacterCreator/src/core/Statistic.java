@@ -248,6 +248,25 @@ public class Statistic implements InvalidationListener, ILoader<Statistic> {
 
 	@Override
 	public void loadBuild(Module module, Step node) {
+		Step rootSum = node.getNode("sum");
+		if (rootSum != null)
+		{
+			loadSubSum(module, rootSum);
+		}
+		else
+		{
+			loadRef(module, node);
+		}
+	}
+
+
+	private void loadRef(Module module, Step node) {
+		addIncrement(module.getStatistic(node.attribute("ref")));
+	}
+
+
+	private void loadSubSum(Module module, Step rootSum) {
+		// TODO Auto-generated method stub
 		
 	}
 }

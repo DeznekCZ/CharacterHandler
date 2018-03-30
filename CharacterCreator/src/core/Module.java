@@ -64,6 +64,8 @@ public class Module {
 
 	private List<StatisticGroup> groupsList = new ArrayList<StatisticGroup>();
 	private HashMap<String, StatisticGroup> groups = new HashMap<>();
+	private List<Race> racesList = new ArrayList<Race>();
+	private HashMap<String, Race> races = new HashMap<>();
 
 	public HashMap<String, StatisticGroup> getGroups() {
 		return groups;
@@ -92,5 +94,38 @@ public class Module {
 	public void addGroup(String id, StatisticGroup statisticGroup) {
 		groupsList.add(statisticGroup);
 		getGroups().put(id, statisticGroup);
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void addRace(String id, Race race) {
+		racesList.add(race);
+		getRaces().put(id, race);
+	}
+
+	public HashMap<String, Race> getRaces() {
+		return races;
+	}
+
+	public HashMap<String, Kind> getKinds(String race) {
+		return getRace(race).getKinds();
+	}
+
+	public Kind getKind(String race, String kind) {
+		return getRace(race).getKind(kind);
+	}
+
+	public Race getRace(String id) {
+		return getRaces().get(id);
+	}
+	
+	public List<Race> getRacesAsList() {
+		return racesList;
+	}
+	
+	public List<Kind> getKinsAsList(String race) {
+		return getRace(race).getKindsAsList();
 	}
 }

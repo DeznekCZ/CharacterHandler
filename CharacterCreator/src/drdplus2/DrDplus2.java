@@ -1,35 +1,15 @@
 package drdplus2;
 
-import java.io.File;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.ResourceBundle;
 
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathFactory;
-
-import org.w3c.dom.Node;
-
-import core.ILoader;
 import core.Module;
 import core.ModuleLoader;
-import core.ModuleLoaderException;
 import core.Statistic;
-import core.StatisticGroup;
-import cz.deznekcz.util.ITryDo;
-import cz.deznekcz.util.xml.XMLLoader;
-import cz.deznekcz.util.xml.XMLStepper;
-import cz.deznekcz.util.xml.XMLStepper.Step;
-import cz.deznekcz.util.xml.XMLStepper.StepDocument;
-import cz.deznekcz.util.xml.XMLStepper.StepList;
-import javafx.collections.ListChangeListener.Change;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.util.Pair;
 
-public class DrDplus2 extends ModuleLoader<Race, Sex> implements Initializable {
+public class DrDplus2 extends ModuleLoader implements Initializable {
 
 	
 
@@ -46,57 +26,27 @@ public class DrDplus2 extends ModuleLoader<Race, Sex> implements Initializable {
 	}
 	
 	static {
-		Race.INIT();
-		Sex.INIT();
-		Skill.INIT();
 	}
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 		
-		raceChoice.setConverter(Race.getConverter());
-		raceChoice.getItems().addAll(Race.values());
-		raceChoice.getSelectionModel().select(Race.HUMAN);
-		Race.race.bind(raceChoice.getSelectionModel().selectedItemProperty());
-		
-		sexChoice.setConverter(Sex.getConverter());
-		Sex.list.addListener((Change<? extends Sex> change) -> {
-			if (Sex.list.contains(sexChoice.getSelectionModel().getSelectedItem()))
-				sexChoice.getItems().setAll(Sex.list);});
-		sexChoice.getSelectionModel().select(Sex.MALE);
-		Sex.sex.bind(sexChoice.getSelectionModel().selectedItemProperty());
-		
 		// Character definition
 
 		Module module = new Module("DrD+2");
-		Queue<Pair<ILoader<?>, Step>> lateConstruct = new LinkedList<Pair<ILoader<?>, Step>>();
 		
-		Exception e = ITryDo.checkValue(() -> {
-			for (String file : Arrays.asList("stats")) {
-				Node root = XMLLoader.load(new File("modules/" + MODULE + "/" + file + ".xml"));
-				StepDocument stepDocument = XMLStepper.from(root.getOwnerDocument());
-
-				ModuleLoader.loadStatistics(stepDocument, module, lateConstruct);
-			}
+		loadData(module);
 		
-			for (Pair<ILoader<?>, Step> iLoader : lateConstruct) {
-				iLoader.getKey().loadBuild(module, iLoader.getValue());
-			}
-		});
-		if (e != null) {
-			throw new ModuleLoaderException(String.format("Module with name =\"%s\" has issues!\n%s", MODULE, e.getLocalizedMessage()));
-		}
+		groupStats(module.getGroup("main"));
+		groupStats(module.getGroup("ext"));
+		groupStats(module.getGroup("vzl"));
+		groupStats(module.getGroup("inc"));
+		groupStats(module.getGroup("boj"));
 		
-		groupStats(primalStats, module.getGroup("main"));
-		groupStats(primalStats, module.getGroup("ext"));
-		groupStats(primalStats, module.getGroup("vzl"));
-		groupStats(primalStats, module.getGroup("inc"));
-		groupStats(primalStats, module.getGroup("boj"));
+		primalStats.setExpandedPane(primalStats.getPanes().get(0));
 		
 		health(3, Statistic.table1(Tables::LIFE, module.getStatistic("ext.kon")));
-		
-		
 		
 		module.getStatistic("main.sil").addIncrement(1);
 		module.getStatistic("main.obr").addIncrement(1);

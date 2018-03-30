@@ -20,15 +20,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </Label>
-            <GridPane fx:id="primalStats">
-              <columnConstraints>
-                <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="35.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-            </GridPane>
+            <Accordion fx:id="primalStats" />
          </children>
       </VBox>
    </left>
@@ -59,16 +51,16 @@
                                  </columnConstraints>
                                  <rowConstraints>
                                     <RowConstraints minHeight="31.0" prefHeight="31.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="31.0" prefHeight="31.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="31.0" prefHeight="31.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="31.0" prefHeight="31.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="31.0" minHeight="31.0" prefHeight="31.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="31.0" minHeight="31.0" prefHeight="31.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="31.0" minHeight="31.0" prefHeight="31.0" vgrow="SOMETIMES" />
                                     <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="ALWAYS" />
                                  </rowConstraints>
                                  <children>
                                     <ChoiceBox fx:id="raceChoice" maxHeight="1.7976931348623157E308" prefHeight="31.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
                                     <Label prefHeight="31.0" text="Rasa" GridPane.rowIndex="1" />
                                     <TextArea fx:id="raceBonusText" editable="false" prefHeight="31.0" promptText="Popis rasy a bonusů" wrapText="true" GridPane.columnSpan="3" GridPane.rowIndex="4" />
-                                    <Label prefHeight="31.0" text="Pohlaví" GridPane.rowIndex="2" />
+                                    <Label prefHeight="31.0" text="Podskupina" GridPane.rowIndex="2" />
                                     <ChoiceBox fx:id="sexChoice" prefHeight="31.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
                                     <TextField fx:id="characterName" prefHeight="30.0" prefWidth="113.0" promptText="Jméno" GridPane.columnSpan="3" />
                                     <Label text="Zkušenost" GridPane.rowIndex="3" />
@@ -86,6 +78,11 @@
                         <TitledPane animated="false" collapsible="false" text="Historie">
                            <content>
                               <TextArea fx:id="characterHistory" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" promptText="Historie Postavy" text="Narodil se sedkovi a rozbil mu kušnu." wrapText="true" BorderPane.alignment="CENTER" />
+                           </content>
+                        </TitledPane>
+                        <TitledPane animated="false" collapsible="false" text="Poznámky">
+                           <content>
+                              <TextArea fx:id="characterNote" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" promptText="Historie Postavy" text="Narodil se sedkovi a rozbil mu kušnu." wrapText="true" BorderPane.alignment="CENTER" />
                            </content>
                         </TitledPane>
                      </children>

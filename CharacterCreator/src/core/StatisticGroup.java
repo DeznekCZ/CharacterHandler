@@ -4,22 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class StatisticGroup {
+public class StatisticGroup extends ModuleEntry<Module,StatisticGroup> {
 
 	public static final StatisticGroup GLOBAL = new StatisticGroup(Module.GLOBAL, "GLOBAL_GROUP", "Generated Statistics");
 	
 	
 	private List<Statistic> list = new ArrayList<Statistic>();
 	private HashMap<String, Statistic> statistics = new HashMap<>();
-	private String id;
-	private String name;
-	private Module module;
 
 	public StatisticGroup(Module module, String id, String name) {
-		this.module = module;
+		super(module, id, name);
 		module.addGroup(id, this);
-		this.id = id;
-		this.name = name;
 	}
 
 	public String getName() {
@@ -46,6 +41,6 @@ public class StatisticGroup {
 	public void addStatistic(String id, Statistic statistic) {
 		list.add(statistic);
 		getStatistics().put(id, statistic);
-	} 
+	}
 
 }
