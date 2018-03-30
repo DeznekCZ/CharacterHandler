@@ -1,24 +1,10 @@
 package core;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
-import java.util.function.Function;
-
-import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-
-import cz.deznekcz.util.xml.XMLLoader;
 
 public class Module {
 	
@@ -58,7 +44,7 @@ public class Module {
 	public static void load(String module, Runnable loader) throws ModuleLoaderException {
 		String MODULE_PATH = "modules/" + module;
 		if (!new File(MODULE_PATH).exists())
-			throw new ModuleLoaderException(String.format("Module with name =\"%s\" does not exist!", module));
+			throw new ModuleLoaderException(new FileNotFoundException(MODULE_PATH), module);
 		loader.run();
 	}
 

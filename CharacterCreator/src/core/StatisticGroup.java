@@ -10,7 +10,7 @@ public class StatisticGroup extends ModuleEntry<Module,StatisticGroup> {
 	
 	
 	private List<Statistic> list = new ArrayList<Statistic>();
-	private HashMap<String, Statistic> statistics = new HashMap<>();
+	private HashMap<String, Statistic> statistics = new ModuleHashMap<StatisticGroup, Statistic>(this);
 
 	public StatisticGroup(Module module, String id, String name) {
 		super(module, id, name);
@@ -41,6 +41,11 @@ public class StatisticGroup extends ModuleEntry<Module,StatisticGroup> {
 	public void addStatistic(String id, Statistic statistic) {
 		list.add(statistic);
 		getStatistics().put(id, statistic);
+	}
+
+	@Override
+	public Module getModule() {
+		return module;
 	}
 
 }

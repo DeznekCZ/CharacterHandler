@@ -3,6 +3,7 @@ package core;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import cz.deznekcz.reference.Out;
 import cz.deznekcz.util.xml.XMLStepper.Step;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -15,35 +16,25 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 
-public class Statistic implements InvalidationListener, ILoader<Statistic> {
+public class Statistic extends ModuleEntry<StatisticGroup,Statistic> implements InvalidationListener, ILoader<Statistic> {
 
 
 	private ObservableList<Statistic> sumBounds = FXCollections.observableArrayList();
-
-
-	private SimpleStringProperty name = new SimpleStringProperty();
 	
 	public String getName() {
-		return name.getValue();
+		return name;
 	}
 
 	private SimpleIntegerProperty value = new SimpleIntegerProperty();
 	private StringBinding valueAsString;
-	
-	private String id;
-
-
-	private StatisticGroup group;
 
 
 	private static int index;
 
 	public Statistic(StatisticGroup group, String id, String name) {
+		super(group, id, name);
 		if (group != StatisticGroup.GLOBAL)
 			group.addStatistic(id, this);
-		this.group = group;
-		this.id = id;
-		this.name.set(name);
 		
 		sumBounds.addListener(this);
 	}
@@ -62,6 +53,7 @@ public class Statistic implements InvalidationListener, ILoader<Statistic> {
 	private boolean maximal = false;
 
 	private String description = null;
+	private SimpleStringProperty sp;
 	
 	public String getDescription() {
 		return description;
@@ -107,7 +99,7 @@ public class Statistic implements InvalidationListener, ILoader<Statistic> {
 	
 	@Override
 	public String toString() {
-		return String.format("Stat(%s,%s)", id, name.get());
+		return String.format("Stat(%s,%s)", id, name);
 	}
 
 	@Override
@@ -179,8 +171,13 @@ public class Statistic implements InvalidationListener, ILoader<Statistic> {
 	}
 
 	public static ObservableValue<String> nameGenerator(CellDataFeatures<Statistic, String> param) {
-		return param.getValue().name;
+		return param.getValue().nameAsProperty();
 	}
+
+	private ObservableValue<String> nameAsProperty() {
+		return sp == null ? (sp = new SimpleStringProperty(name)) : sp;
+	}
+
 
 	public static ObservableValue<String> valueGenerator(CellDataFeatures<Statistic, String> param) {
 		return param.getValue().valueAsString;
@@ -199,7 +196,7 @@ public class Statistic implements InvalidationListener, ILoader<Statistic> {
 	}
 
 	public Statistic maximal(int number) {
-		return minimal("MAX("+number+")", number);
+		return maximal("MAX("+number+")", number);
 	}
 
 	public Statistic maximal(String name, int number) {
@@ -248,25 +245,62 @@ public class Statistic implements InvalidationListener, ILoader<Statistic> {
 
 	@Override
 	public void loadBuild(Module module, Step node) {
-		Step rootSum = node.getNode("sum");
-		if (rootSum != null)
-		{
-			loadSubSum(module, rootSum);
-		}
-		else
-		{
-			loadRef(module, node);
-		}
+		if (node.hasElement("sum"))
+			addIncrement(loadSubSum(module, node.getNode("sum")));
+		if (node.hasElement("value"))
+			addIncrement(loadRef(module, node.getNode("value")));
 	}
 
 
-	private void loadRef(Module module, Step node) {
-		addIncrement(module.getStatistic(node.attribute("ref")));
+	private static Statistic loadRef(Module module, Step node) {
+		return modifiers(module.getStatistic(node.attribute("ref")), node);
 	}
 
 
-	private void loadSubSum(Module module, Step rootSum) {
-		// TODO Auto-generated method stub
-		
+	private static Statistic modifiers(Statistic statistic, Step node) {
+		Statistic sum = Statistic.init(statistic);
+		if (node.hasAttribute("increment"))
+		{
+			sum.addIncrement(Integer.parseInt(node.attribute("increment")));
+		}
+		if (node.hasAttribute("divideUp"))
+		{
+			sum = sum.divideUp(Integer.parseInt(node.attribute("divideUp")));
+		}
+		if (node.hasAttribute("divideDown"))
+		{
+			sum = sum.divideDown(Integer.parseInt(node.attribute("divideDown")));
+		}
+		if (node.hasAttribute("min"))
+		{
+			sum = sum.minimal(Integer.parseInt(node.attribute("min")));
+		}
+		if (node.hasAttribute("max"))
+		{
+			sum = sum.maximal(Integer.parseInt(node.attribute("max")));
+		}
+		return sum;
+	}
+
+
+	private static Statistic loadSubSum(Module module, Step rootSum) {
+		Statistic sum = new Statistic("SUM#"+(index++));
+		if (rootSum.hasElement("sum")) 
+			rootSum.getList("sum").foreach((sumStep) ->
+			{
+				sum.addIncrement(loadSubSum(module, sumStep));
+			});
+		if (rootSum.hasElement("value")) 
+			rootSum.getList("value").foreach((valueStep) ->
+			{
+				sum.addIncrement(loadRef(module, valueStep));
+			});
+		return modifiers(sum, rootSum);
+	}
+
+
+	@Override
+	public Module getModule() {
+		return module.getModule();
 	}
 }

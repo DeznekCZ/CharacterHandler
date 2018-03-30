@@ -221,15 +221,16 @@
           <xs:element name="sum" type="sumType" />
           <xs:element name="value" type="valueType"/>
         </xs:choice>
-        <xs:attribute name="increment" type="xs:integer"
-          use="optional" />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="divableType">
-    <xs:attribute name="divideUp" type="xs:integer" use="optional" />
+    <xs:attribute name="increment"  type="xs:integer" use="optional" />
+    <xs:attribute name="divideUp"   type="xs:integer" use="optional" />
     <xs:attribute name="divideDown" type="xs:integer" use="optional" />
+    <xs:attribute name="min"        type="xs:integer" use="optional" />
+    <xs:attribute name="max"        type="xs:integer" use="optional" />
   </xs:complexType>
 
   <xs:complexType name="valueType">

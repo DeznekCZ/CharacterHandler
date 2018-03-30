@@ -16,8 +16,8 @@
       </stat>
       <stat id="kon" name="kondice"
         desc="Kondice vyjadřuje hrdinovu schonost vydržet vyšší silové či magické vypětí.">
-        <sum increment="5">
-          <value ref="main.odl" />
+        <sum increment="5" min="10">
+          <value ref="ext.odl" />
           <value ref="main.vol" />
         </sum>
       </stat>

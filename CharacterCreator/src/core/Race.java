@@ -7,7 +7,7 @@ import java.util.List;
 public class Race extends ModuleEntry<Module, Race> {
 
 	private List<Kind> kindsList = new ArrayList<>();
-	private HashMap<String, Kind> kinds = new HashMap<>();
+	private HashMap<String, Kind> kinds = new ModuleHashMap<Race, Kind>(this);
 
 	public Race(Module module, String id, String name) {
 		super(module, id, name);
@@ -29,6 +29,11 @@ public class Race extends ModuleEntry<Module, Race> {
 	public void addKind(String id, Kind kind) {
 		kindsList.add(kind);
 		kinds.put(id, kind);
+	}
+
+	@Override
+	public Module getModule() {
+		return module;
 	}
 	
 }

@@ -92,6 +92,9 @@ public class ModuleLoader {
 	protected TextArea characterHistory;
 	
 	@FXML
+	protected TextArea characterNotes;
+	
+	@FXML
 	protected ChoiceBox<Race> raceChoice;
 
 	@FXML
@@ -193,20 +196,25 @@ public class ModuleLoader {
 		Queue<Pair<ILoader<?>, Step>> lateConstruct = new LinkedList<Pair<ILoader<?>, Step>>();
 		
 		Exception e = ITryDo.checkValue(() -> {
-			for (String file : Arrays.asList("stats", "races")) {
-				Node root = XMLLoader.load(new File("modules/" + module.getName() + "/" + file + ".xml"));
-				StepDocument stepDocument = XMLStepper.from(root.getOwnerDocument());
+			Node root;
+			StepDocument stepDocument;
+			
+			root = XMLLoader.load(new File("modules/" + module.getName() + "/stats.xml"));
+			stepDocument = XMLStepper.from(root.getOwnerDocument());
 
-				ModuleLoader.loadStatistics(stepDocument, module, lateConstruct);
-				ModuleLoader.loadRaces(stepDocument, module, lateConstruct);
-			}
+			ModuleLoader.loadStatistics(stepDocument, module, lateConstruct);
+			
+			root = XMLLoader.load(new File("modules/" + module.getName() + "/races.xml"));
+			stepDocument = XMLStepper.from(root.getOwnerDocument());
+
+			ModuleLoader.loadRaces(stepDocument, module, lateConstruct);
 		
 			for (Pair<ILoader<?>, Step> iLoader : lateConstruct) {
 				iLoader.getKey().loadBuild(module, iLoader.getValue());
 			}
 		});
 		if (e != null) {
-			throw new ModuleLoaderException(String.format("Module with name =\"%s\" has issues!\n%s", module.getName(), e.getLocalizedMessage()));
+			throw new ModuleLoaderException(e, module.getName());
 		}
 	}
 }

@@ -14,4 +14,9 @@ public class Kind extends ModuleEntry<Race, Kind> implements ILoader<Kind> {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public Module getModule() {
+		return module.getModule();
+	}
 }

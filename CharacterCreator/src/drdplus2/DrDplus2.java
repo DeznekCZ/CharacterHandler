@@ -48,19 +48,31 @@ public class DrDplus2 extends ModuleLoader implements Initializable {
 		
 		health(3, Statistic.table1(Tables::LIFE, module.getStatistic("ext.kon")));
 		
+		// from roots
 		module.getStatistic("main.sil").addIncrement(1);
 		module.getStatistic("main.obr").addIncrement(1);
 		module.getStatistic("main.vol").addIncrement(1);
 		module.getStatistic("main.int").addIncrement(1);
+		
+		// race bonus
+		module.getStatistic("main.sil").addIncrement(+1);
+        module.getStatistic("main.obr").addIncrement(-1);
+        module.getStatistic("main.vol").addIncrement(+2);
+        module.getStatistic("main.int").addIncrement(-1);
+        module.getStatistic("main.chr").addIncrement(-2);
+        module.getStatistic("ext.odl" ).addIncrement(+1);
+        module.getStatistic("ext.sms" ).addIncrement(-1);
 		
 		// from skills
 		module.getStatistic("main.sil").addIncrement(3);
 		module.getStatistic("ext.moc").addIncrement(3);
 
 		characterName.setText("Torwald de Tureda");
-		characterHistory.setText("Rodné mìsto: Uthork"
-				+ "\nRodina runových kováøù: De Tureda"
-				+ "\nPøístup do:"
+		characterHistory.setText(
+				    "Rodné mìsto: Uthork"
+				+ "\nRodina runových kováøù: De Tureda");
+		characterNotes.setText(
+				    "Pøístup do:"
 				+ "\n- hlavní mìsto"
 				+ "\n- Holubí vrch (runová tvrz, banda kopií)");
 	}
