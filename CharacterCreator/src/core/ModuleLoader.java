@@ -29,6 +29,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableStringValue;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -38,6 +39,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
@@ -98,7 +100,7 @@ public class ModuleLoader {
 	protected ChoiceBox<Race> raceChoice;
 
 	@FXML
-	protected ChoiceBox<Kind> sexChoice;
+	protected ChoiceBox<Kind> kindChoice;
 	
 	public void initialize(URL location, ResourceBundle resources) {
 		characterLevel = new SimpleIntegerProperty(0);
@@ -146,7 +148,7 @@ public class ModuleLoader {
 	}
 
 	protected void health(int lines, Statistic value) {
-		
+		// TODO
 	}
 	
 	@FXML
@@ -163,33 +165,27 @@ public class ModuleLoader {
 
 	public static void loadStatistics(StepDocument stepDocument, Module module, Queue<Pair<ILoader<?>, Step>> lateConstruct) {
 		StepList stepList = stepDocument.getList("module/stats/stats_group");
-		if (stepList != null)
-		{
-			stepList.foreach(XMLStepper::hasAttribute, (groupStep) -> {
-				StatisticGroup group = new StatisticGroup(module, groupStep.attribute("id"), groupStep.attribute("name"));
-				
-				groupStep.getList("stat").foreach(XMLStepper::hasAttribute, (statStep) -> {
-					Statistic stat = new Statistic(group, statStep.attribute("id"), statStep.attribute("name"));
-					stat.description(statStep.attribute("desc"));
-					lateConstruct.add(new Pair<ILoader<?>, XMLStepper.Step>(stat, statStep));
-				});
+		stepList.foreach(XMLStepper::hasAttribute, (groupStep) -> {
+			StatisticGroup group = new StatisticGroup(module, groupStep.attribute("id"), groupStep.attribute("name"));
+			
+			groupStep.getList("stat").foreach(XMLStepper::hasAttribute, (statStep) -> {
+				Statistic stat = new Statistic(group, statStep.attribute("id"), statStep.attribute("name"));
+				stat.description(statStep.attribute("desc"));
+				lateConstruct.add(new Pair<ILoader<?>, XMLStepper.Step>(stat, statStep));
 			});
-		}
+		});
 	}
 
 	public static void loadRaces(StepDocument stepDocument, Module module, Queue<Pair<ILoader<?>, Step>> lateConstruct) {
 		StepList stepList = stepDocument.getList("module/races/race");
-		if (stepList != null)
-		{
-			stepList.foreach(XMLStepper::hasAttribute, (raceStep) -> {
-				Race group = new Race(module, raceStep.attribute("id"), raceStep.attribute("name"));
-				
-				raceStep.getList("kind").foreach(XMLStepper::hasAttribute, (kindStep) -> {
-					Kind kind = new Kind(group, kindStep.attribute("id"), kindStep.attribute("name"));
-					lateConstruct.add(new Pair<ILoader<?>, XMLStepper.Step>(kind, kindStep));
-				});
+		stepList.foreach(XMLStepper::hasAttribute, (raceStep) -> {
+			Race group = new Race(module, raceStep.attribute("id"), raceStep.attribute("name"));
+			
+			raceStep.getList("kind").foreach(XMLStepper::hasAttribute, (kindStep) -> {
+				Kind kind = new Kind(group, kindStep.attribute("id"), kindStep.attribute("name"));
+				lateConstruct.add(new Pair<ILoader<?>, XMLStepper.Step>(kind, kindStep));
 			});
-		}
+		});
 	}
 
 	protected void loadData(Module module) {
@@ -216,5 +212,18 @@ public class ModuleLoader {
 		if (e != null) {
 			throw new ModuleLoaderException(e, module.getName());
 		}
+		kindChoice.getSelectionModel().selectedItemProperty().addListener((o, l, n) -> {
+			if (l != null) l.setSelected(false);
+			if (n != null) n.setSelected(true);
+		});
+		kindChoice.setConverter(Kind.converter());
+		raceChoice.setItems(FXCollections.observableArrayList(module.getRacesAsList()));
+		raceChoice.getSelectionModel().selectedItemProperty().addListener((o, l, n) -> {
+			kindChoice.getSelectionModel().clearSelection();
+			kindChoice.setItems(FXCollections.observableArrayList(n.getKindsAsList()));
+			kindChoice.getSelectionModel().select(0);
+		});
+		raceChoice.setConverter(Race.converter());
+		raceChoice.getSelectionModel().select(0);
 	}
 }

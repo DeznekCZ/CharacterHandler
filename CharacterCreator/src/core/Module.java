@@ -99,6 +99,11 @@ public class Module {
 		return getRace(race).getKinds();
 	}
 
+	public Kind getKind(String raceKind) {
+		String[] path = raceKind.split("\\.");
+		return getKind(path[0], path[1]);
+	}
+
 	public Kind getKind(String race, String kind) {
 		return getRace(race).getKind(kind);
 	}

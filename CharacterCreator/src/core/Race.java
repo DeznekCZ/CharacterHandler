@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.util.StringConverter;
+
 public class Race extends ModuleEntry<Module, Race> {
 
 	private List<Kind> kindsList = new ArrayList<>();
@@ -36,4 +42,19 @@ public class Race extends ModuleEntry<Module, Race> {
 		return module;
 	}
 	
+	public static StringConverter<Race> converter()
+	{
+		return new StringConverter<Race>() {
+
+			@Override
+			public String toString(Race object) {
+				return object.getName();
+			}
+
+			@Override
+			public Race fromString(String string) {
+				return null;
+			}
+		};
+	}
 }

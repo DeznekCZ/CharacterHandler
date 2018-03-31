@@ -9,6 +9,8 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.IntegerExpression;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -37,6 +39,7 @@ public class Statistic extends ModuleEntry<StatisticGroup,Statistic> implements 
 			group.addStatistic(id, this);
 		
 		sumBounds.addListener(this);
+		this.predicted = new SimpleBooleanProperty(true);
 	}
 
 
@@ -54,6 +57,7 @@ public class Statistic extends ModuleEntry<StatisticGroup,Statistic> implements 
 
 	private String description = null;
 	private SimpleStringProperty sp;
+	private BooleanProperty predicted;
 	
 	public String getDescription() {
 		return description;
@@ -85,11 +89,11 @@ public class Statistic extends ModuleEntry<StatisticGroup,Statistic> implements 
 		for (Statistic integerStatistic : sumBounds) {
 			temp += integerStatistic.value.get();
 		}
-		this.value.set(
+		this.value.set( predicted != null && predicted.get() ? (
 				(minimal) ? Math.min(compare, temp) :
 					(maximal) ? Math.max(compare, temp) :	
 						(divider > 0) ? division(temp) : temp
-								);
+								): 0);
 	}
 	
 	private int division(int arg_dValue) {
@@ -302,5 +306,15 @@ public class Statistic extends ModuleEntry<StatisticGroup,Statistic> implements 
 	@Override
 	public Module getModule() {
 		return module.getModule();
+	}
+
+	public Statistic predicted(BooleanProperty predicted) {
+		Statistic s = new Statistic("PREDICTED#"+index++);
+		s.predicted = predicted;
+		predicted.addListener((o,l,n) -> {
+			s.invalidated(o);
+		});
+		s.addIncrement(this);
+		return s;
 	}
 }

@@ -5,6 +5,7 @@ public abstract class ModuleEntry<Owner,Type extends ModuleEntry<Owner, Type>> i
 	protected String id;
 	protected String name;
 	protected Owner module;
+	private String toString;
 	
 	public ModuleEntry(Owner module, String id, String name) {
 		this.module = module;
@@ -17,5 +18,12 @@ public abstract class ModuleEntry<Owner,Type extends ModuleEntry<Owner, Type>> i
 	@Override
 	public String getName() {
 		return name;
+	}
+	
+	@Override
+	public String toString() {
+		return toString != null ? toString : (toString = 
+				getClass().getSimpleName() + "(" + id + "," + name + ")"
+				);
 	}
 }

@@ -41,7 +41,7 @@
                <content>
                   <VBox>
                      <children>
-                        <TitledPane animated="false" collapsible="false" text="Rasa a úroveń">
+                        <TitledPane animated="false" collapsible="false" text="Rasa a úroveň">
                            <content>
                               <GridPane maxWidth="1.7976931348623157E308">
                                  <columnConstraints>
@@ -61,7 +61,7 @@
                                     <Label prefHeight="31.0" text="Rasa" GridPane.rowIndex="1" />
                                     <TextArea fx:id="raceBonusText" editable="false" prefHeight="31.0" promptText="Popis rasy a bonusů" wrapText="true" GridPane.columnSpan="3" GridPane.rowIndex="4" />
                                     <Label prefHeight="31.0" text="Pohlaví" GridPane.rowIndex="2" />
-                                    <ChoiceBox fx:id="sexChoice" prefHeight="31.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                                    <ChoiceBox fx:id="kindChoice" prefHeight="31.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
                                     <TextField fx:id="characterName" prefHeight="30.0" prefWidth="113.0" promptText="Jméno" GridPane.columnSpan="3" />
                                     <Label text="Zkušenost" GridPane.rowIndex="3" />
                                     <TextField fx:id="characterLevelText" GridPane.columnIndex="1" GridPane.rowIndex="3" />
@@ -80,7 +80,7 @@
                               <TextArea fx:id="characterHistory" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" promptText="Historie Postavy" text="Narodil se sedkovi a rozbil mu kušnu." wrapText="true" BorderPane.alignment="CENTER" />
                            </content>
                         </TitledPane>
-                        <TitledPane animated="false" collapsible="false" text="Historie">
+                        <TitledPane animated="false" collapsible="false" text="Poznámky">
                            <content>
                               <TextArea fx:id="characterNotes" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" promptText="Historie Postavy" text="Narodil se sedkovi a rozbil mu kušnu." wrapText="true" BorderPane.alignment="CENTER" />
                            </content>
