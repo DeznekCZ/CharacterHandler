@@ -188,6 +188,19 @@ public class ModuleLoader {
 		});
 	}
 
+	public static void loadSkills(StepDocument stepDocument, Module module, Queue<Pair<ILoader<?>, Step>> lateConstruct) {
+		StepList stepList = stepDocument.getList("module/skills/skills_group");
+		stepList.foreach(XMLStepper::hasAttribute, (groupStep) -> {
+			SkillGroup group = new SkillGroup(module, groupStep.attribute("id"), groupStep.attribute("name"));
+			
+			groupStep.getList("skill").foreach(XMLStepper::hasAttribute, (skillStep) -> {
+				Skill skill = new Skill(group, skillStep.attribute("id"), skillStep.attribute("name"));
+				skill.setDescription(skillStep.attribute("desc"));
+				lateConstruct.add(new Pair<ILoader<?>, XMLStepper.Step>(skill, skillStep));
+			});
+		});
+	}
+
 	protected void loadData(Module module) {
 		Queue<Pair<ILoader<?>, Step>> lateConstruct = new LinkedList<Pair<ILoader<?>, Step>>();
 		
@@ -195,16 +208,25 @@ public class ModuleLoader {
 			Node root;
 			StepDocument stepDocument;
 			
+			// STATS
 			root = XMLLoader.load(new File("modules/" + module.getName() + "/stats.xml"));
 			stepDocument = XMLStepper.from(root.getOwnerDocument());
 
 			ModuleLoader.loadStatistics(stepDocument, module, lateConstruct);
-			
+
+			// RACES
 			root = XMLLoader.load(new File("modules/" + module.getName() + "/races.xml"));
 			stepDocument = XMLStepper.from(root.getOwnerDocument());
 
 			ModuleLoader.loadRaces(stepDocument, module, lateConstruct);
+			
+			// SKILLS
+			root = XMLLoader.load(new File("modules/" + module.getName() + "/skills.xml"));
+			stepDocument = XMLStepper.from(root.getOwnerDocument());
+
+			ModuleLoader.loadSkills(stepDocument, module, lateConstruct);
 		
+			// BINDING
 			for (Pair<ILoader<?>, Step> iLoader : lateConstruct) {
 				iLoader.getKey().loadBuild(module, iLoader.getValue());
 			}

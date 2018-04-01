@@ -52,6 +52,8 @@ public class Module {
 	private HashMap<String, StatisticGroup> groups = new HashMap<>();
 	private List<Race> racesList = new ArrayList<Race>();
 	private HashMap<String, Race> races = new HashMap<>();
+	private List<SkillGroup> skillGroupList;
+	private HashMap<String, SkillGroup> skillGroups = new HashMap<>();
 
 	public HashMap<String, StatisticGroup> getGroups() {
 		return groups;
@@ -60,12 +62,12 @@ public class Module {
 		return groupsList;
 	}
 	
-	public StatisticGroup getGroup(String group) {
+	public StatisticGroup getStatGroup(String group) {
 		return getGroups().get(group);
 	}
 	
 	public HashMap<String, Statistic> getStatistics(String group) {
-		return getGroup(group).getStatistics();
+		return getStatGroup(group).getStatistics();
 	}
 
 	public Statistic getStatistic(String group, String statistic) {
@@ -77,7 +79,7 @@ public class Module {
 		return getStatistic(path[0], path[1]);
 	}
 
-	public void addGroup(String id, StatisticGroup statisticGroup) {
+	public void addStatGroup(String id, StatisticGroup statisticGroup) {
 		groupsList.add(statisticGroup);
 		getGroups().put(id, statisticGroup);
 	}
@@ -118,5 +120,28 @@ public class Module {
 	
 	public List<Kind> getKinsAsList(String race) {
 		return getRace(race).getKindsAsList();
+	}
+
+	public void addSkillGroup(String id, SkillGroup skillGroup) {
+		skillGroupList.add(skillGroup);
+		skillGroupList.sort(SkillGroup::compare);
+		getSkillGroups().put(id, skillGroup);
+	}
+
+	private HashMap<String, SkillGroup> getSkillGroups() {
+		return skillGroups;
+	}
+
+	public SkillGroup getSkillGroup(String group) {
+		return getSkillGroups().get(group);
+	}
+
+	public Skill getSkill(String group, String skill) {
+		return getSkillGroup(group).getSkill(skill);
+	}
+
+	public Skill getSkill(String groupSkill) {
+		String[] path = groupSkill.split("\\.");
+		return getSkill(path[0], path[1]);
 	}
 }

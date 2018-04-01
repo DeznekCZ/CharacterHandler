@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:db="database.xsd" elementFormDefault="unqualified">
+
+	<xs:element name="module">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element name="stats" minOccurs="0" maxOccurs="1">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="stats_group" minOccurs="0"
+								maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="stat" minOccurs="0" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:choice minOccurs="0" maxOccurs="unbounded">
+														<xs:element name="sum" type="sumType" />
+														<xs:element name="value" type="valueType" />
+													</xs:choice>
+												</xs:sequence>
+												<xs:attribute name="id" use="required" type="xs:QName" />
+												<xs:attribute name="name" use="required" type="xs:string" />
+												<xs:attribute name="visible" use="optional"
+													default="true" type="xs:boolean" />
+												<xs:attribute name="desc" use="required" type="xs:string" />
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="id" use="required" type="xs:QName" />
+									<xs:attribute name="name" use="required" type="xs:string" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="races" minOccurs="0" maxOccurs="1">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="race" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="kind" minOccurs="1" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="bonus" minOccurs="0"
+														maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:attribute name="ref" type="xs:QName"
+																use="required" />
+															<xs:attribute name="increase" type="xs:integer"
+																use="required" />
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="skill" minOccurs="0"
+														maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:attribute name="ref" type="xs:QName"
+																use="required" />
+															<xs:attribute name="lvl" type="xs:integer"
+																use="required" />
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+												<xs:attribute name="id" type="xs:QName" />
+												<xs:attribute name="name" type="xs:string" />
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="id" type="xs:QName" />
+									<xs:attribute name="name" type="xs:string" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="skills" minOccurs="0" maxOccurs="1">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="skills_group" minOccurs="0" maxOccurs="1">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="skill" minOccurs="0" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="requirement" minOccurs="0" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="skill" type="skillType" />
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+												<xs:attribute name="id" use="required" type="xs:QName" />
+												<xs:attribute name="name" use="required" type="xs:string" />
+												<xs:attribute name="stat_enhance" use="optional"
+													type="xs:QName" />
+												<xs:attribute name="stat_use" use="optional"
+													type="xs:QName" />
+                        <xs:attribute name="maxLevel" use="optional" type="xs:unsignedInt" default="3" />
+                        <xs:attribute name="desc" use="required" type="xs:string" />
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+                  <xs:attribute name="id" use="required" type="xs:QName" />
+                  <xs:attribute name="name" use="required" type="xs:string" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="weapons" minOccurs="0" maxOccurs="1">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="weapon" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="f2f" minOccurs="0" maxOccurs="1">
+											<xs:complexType>
+												<xs:attribute name="name" use="required" type="xs:string" />
+												<xs:attribute name="skill" use="required" type="xs:QName" />
+												<xs:attribute name="hand" use="required" type="xs:string" />
+												<xs:attribute name="attack" use="required"
+													type="xs:integer" />
+												<xs:attribute name="slash_damage" use="optional"
+													type="xs:integer" />
+												<xs:attribute name="piercing_damage" use="optional"
+													type="xs:integer" />
+												<xs:attribute name="blunt_damage" use="optional"
+													type="xs:integer" />
+												<xs:attribute name="strength" use="required"
+													type="xs:integer" />
+												<xs:attribute name="length" use="required"
+													type="xs:integer" />
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="ranged" minOccurs="0" maxOccurs="1">
+											<xs:complexType>
+												<xs:attribute name="name" use="required" type="xs:string" />
+												<xs:attribute name="skill" use="required" type="xs:QName" />
+												<xs:attribute name="hand" use="required" type="xs:string" />
+												<xs:attribute name="attack" use="required"
+													type="xs:integer" />
+												<xs:attribute name="slash_damage" use="optional"
+													type="xs:integer" />
+												<xs:attribute name="piercing_damage" use="optional"
+													type="xs:integer" />
+												<xs:attribute name="blunt_damage" use="optional"
+													type="xs:integer" />
+												<xs:attribute name="strength" use="required"
+													type="xs:integer" />
+												<xs:attribute name="distance" use="required"
+													type="xs:integer" />
+												<xs:attribute name="strength_loading" use="required"
+													type="xs:integer" />
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="defense" minOccurs="0" maxOccurs="1">
+											<xs:complexType>
+												<xs:attribute name="name" use="required" type="xs:string" />
+												<xs:attribute name="skill" use="required" type="xs:QName" />
+												<xs:attribute name="hand" use="required" type="xs:string" />
+												<xs:attribute name="defense" use="required"
+													type="xs:integer" />
+												<xs:attribute name="strength" use="required"
+													type="xs:integer" />
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="id" use="required" type="xs:QName" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="armors" minOccurs="0" maxOccurs="1">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="armor" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:attribute name="id" use="required" type="xs:QName" />
+									<xs:attribute name="name" use="required" type="xs:string" />
+									<xs:attribute name="slash" use="required" type="xs:integer" />
+									<xs:attribute name="piercing" use="required" type="xs:integer" />
+									<xs:attribute name="blunt" use="required" type="xs:integer" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="items" type="xs:string"></xs:element>
+			</xs:choice>
+			<xs:attribute name="id" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="sumType">
+		<xs:complexContent>
+			<xs:extension base="divableType">
+				<xs:choice minOccurs="1" maxOccurs="unbounded">
+					<xs:element name="sum" type="sumType" />
+					<xs:element name="value" type="valueType" />
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="divableType">
+		<xs:attribute name="increment" type="xs:integer" use="optional" />
+		<xs:attribute name="divideUp" type="xs:integer" use="optional" />
+		<xs:attribute name="divideDown" type="xs:integer" use="optional" />
+		<xs:attribute name="min" type="xs:integer" use="optional" />
+		<xs:attribute name="max" type="xs:integer" use="optional" />
+	</xs:complexType>
+
+	<xs:complexType name="valueType">
+		<xs:complexContent>
+			<xs:extension base="divableType">
+				<xs:attribute name="ref" type="xs:QName" use="required" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="skillType">
+		<xs:attribute name="ref" type="xs:QName" />
+		<xs:attribute name="lvl" type="xs:integer" />
+	</xs:complexType>
+
+</xs:schema>

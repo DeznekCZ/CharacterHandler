@@ -14,7 +14,7 @@ public class StatisticGroup extends ModuleEntry<Module,StatisticGroup> {
 
 	public StatisticGroup(Module module, String id, String name) {
 		super(module, id, name);
-		module.addGroup(id, this);
+		module.addStatGroup(id, this);
 	}
 
 	public String getName() {

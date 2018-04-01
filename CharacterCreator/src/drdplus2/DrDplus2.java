@@ -38,11 +38,11 @@ public class DrDplus2 extends ModuleLoader implements Initializable {
 		
 		loadData(module);
 		
-		groupStats(module.getGroup("main"));
-		groupStats(module.getGroup("ext"));
-		groupStats(module.getGroup("vzl"));
-		groupStats(module.getGroup("inc"));
-		groupStats(module.getGroup("boj"));
+		groupStats(module.getStatGroup("main"));
+		groupStats(module.getStatGroup("ext"));
+		groupStats(module.getStatGroup("vzl"));
+		groupStats(module.getStatGroup("inc"));
+		groupStats(module.getStatGroup("boj"));
 		
 		primalStats.setExpandedPane(primalStats.getPanes().get(0));
 		

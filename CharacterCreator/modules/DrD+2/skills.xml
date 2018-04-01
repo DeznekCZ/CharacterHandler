@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module id="drd+2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="database.xsd">
+  <skills>
+    <skills_group id="race" name="Schopnosti ras" >
+      <skill id="infravideni" name="Infravidění" desc=""/>
+    </skills_group>
+  	<skills_group id="weapon" name="Bojová dovednost" >
+  		<skill id="palice_kyje"    name="Boj s palicemi a kyji"  desc=""/>
+  		<skill id="mece_dyky"      name="Boj s mečemi a dýkami"  desc=""/>
+  		<skill id="remdihy_bijaky" name="Boj s řemdihy a bijáky" desc=""/>
+  	</skills_group>
+  </skills>
+</module>
