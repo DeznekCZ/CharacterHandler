@@ -6,6 +6,8 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.layout.HBox?>
 
 <BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="drdplus2.DrDplus2">
    <left>
@@ -29,7 +31,17 @@
         <tabs>
           <Tab text="Dovednosti a výbava">
                <content>
-                  <BorderPane prefHeight="200.0" prefWidth="200.0" />
+                  <BorderPane prefHeight="200.0" prefWidth="200.0" >
+                    <top>
+                      <HBox >
+                        <CheckBox fx:id="editSkills" text="Upravit" alignment="CENTER_LEFT" ></CheckBox>
+                        <Button fx:id="addSkills" text="Naučit se" onAction="#addSkills" ></Button>
+                      </HBox>
+                    </top>
+                    <center>
+                      <Accordion fx:id="characterSkills"  ></Accordion>
+                    </center>
+                  </BorderPane>
                </content>
           </Tab>
           <Tab text="Výstroj a výzbroj">

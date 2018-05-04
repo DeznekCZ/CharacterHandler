@@ -48,11 +48,11 @@ public class Module {
 		loader.run();
 	}
 
-	private List<StatisticGroup> groupsList = new ArrayList<StatisticGroup>();
+	private List<StatisticGroup> groupsList = new ArrayList<>();
 	private HashMap<String, StatisticGroup> groups = new HashMap<>();
-	private List<Race> racesList = new ArrayList<Race>();
+	private List<Race> racesList = new ArrayList<>();
 	private HashMap<String, Race> races = new HashMap<>();
-	private List<SkillGroup> skillGroupList;
+	private List<SkillGroup> skillGroupList = new ArrayList<>();
 	private HashMap<String, SkillGroup> skillGroups = new HashMap<>();
 
 	public HashMap<String, StatisticGroup> getGroups() {
@@ -75,7 +75,7 @@ public class Module {
 	} 
 	
 	public Statistic getStatistic(String groupStatistic) {
-		String[] path = groupStatistic.split("\\.");
+		String[] path = groupStatistic.split("[.]");
 		return getStatistic(path[0], path[1]);
 	}
 
@@ -102,7 +102,7 @@ public class Module {
 	}
 
 	public Kind getKind(String raceKind) {
-		String[] path = raceKind.split("\\.");
+		String[] path = raceKind.split("[.]");
 		return getKind(path[0], path[1]);
 	}
 
@@ -124,7 +124,6 @@ public class Module {
 
 	public void addSkillGroup(String id, SkillGroup skillGroup) {
 		skillGroupList.add(skillGroup);
-		skillGroupList.sort(SkillGroup::compare);
 		getSkillGroups().put(id, skillGroup);
 	}
 
@@ -132,16 +131,20 @@ public class Module {
 		return skillGroups;
 	}
 
+	public List<SkillGroup> getSkillGroupsAsList() {
+		return skillGroupList;
+	}
+
 	public SkillGroup getSkillGroup(String group) {
 		return getSkillGroups().get(group);
 	}
 
-	public Skill getSkill(String group, String skill) {
-		return getSkillGroup(group).getSkill(skill);
+	public Skill getSkill(String groupSkill) {
+		String[] path = groupSkill.split("[.]");
+		return getSkill(path[0], path[1]);
 	}
 
-	public Skill getSkill(String groupSkill) {
-		String[] path = groupSkill.split("\\.");
-		return getSkill(path[0], path[1]);
+	public Skill getSkill(String group, String skill) {
+		return getSkillGroup(group).getSkill(skill);
 	}
 }

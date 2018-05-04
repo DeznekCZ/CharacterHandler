@@ -1,6 +1,8 @@
 package core;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import cz.deznekcz.util.xml.XMLStepper.Step;
 import javafx.beans.property.BooleanProperty;
@@ -12,23 +14,31 @@ public class Kind extends ModuleEntry<Race, Kind> implements ILoader<Kind> {
 	public HashMap<String, Statistic> statBonuses;
 	private BooleanProperty selected;
 	private String path;
+	private List<Skill> raceSkills;
 	
 	public Kind(Race race, String id, String name) {
 		super(race, id, name);
 		race.addKind(id, this);
 		selected = new SimpleBooleanProperty(false);
 		this.path = race.id + "." + id;
+		raceSkills = new ArrayList<>();
 	}
 
 	@Override
 	public void loadBuild(Module module, Step node) {
 		if (node.hasElement("bonus"))
 		{
-			for (Step bonusStep : node.getList("bonus").asStepList()) {
+			for (Step bonusStep : node.getList("bonus").asList()) {
 				Statistic bonusStat = Statistic
 						.constant(bonusStep.attribute("increase", Integer::parseInt))
 						.predicted(selected);
 				getModule().getStatistic(bonusStep.attribute("ref")).addIncrement(bonusStat);
+			}
+		}
+		if (node.hasElement("skill"))
+		{
+			for (Step bonusStep : node.getList("skill").asList()) {
+				raceSkills.add(getModule().getSkill(bonusStep.attribute("ref")));
 			}
 		}
 	}
@@ -43,7 +53,10 @@ public class Kind extends ModuleEntry<Race, Kind> implements ILoader<Kind> {
 	}
 	
 	public void setSelected(boolean selected) {
-		this.selected.set(selected);;
+		this.selected.set(selected);
+		for (Skill skill : raceSkills) {
+			skill.level(skill.getLevel() + (selected ? 1 : -1));
+		}
 	}
 	
 	public boolean getSelected() {

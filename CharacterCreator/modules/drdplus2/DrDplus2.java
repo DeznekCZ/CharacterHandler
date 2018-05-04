@@ -6,24 +6,26 @@ import java.util.ResourceBundle;
 import core.Module;
 import core.ModuleLoader;
 import core.Statistic;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
+import javafx.scene.control.Accordion;
+import javafx.scene.control.Alert;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class DrDplus2 extends ModuleLoader implements Initializable {
-
-	
-
-	public static DrDplus2 INSTANCE;
 	
 	public DrDplus2() {
-		INSTANCE = this;
+		
 	}
 	
 	private static final String MODULE = "DrD+2";
 	
-	public static Scene load() {
-		return load(MODULE);
-	}
+	@Override
+	protected String getName() { return MODULE; }
 	
 	static {
 	}
@@ -32,11 +34,13 @@ public class DrDplus2 extends ModuleLoader implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
 		
+		ableAdd = new SimpleBooleanProperty(false);
+		
 		// Character definition
 
-		Module module = new Module("DrD+2");
+		module = new Module(MODULE);
 		
-		loadData(module);
+		loadData();
 		
 		groupStats(module.getStatGroup("main"));
 		groupStats(module.getStatGroup("ext"));
@@ -66,10 +70,22 @@ public class DrDplus2 extends ModuleLoader implements Initializable {
 //		module.getStatistic("ext.sms" ).addIncrement(-1);
 		
 		// from skills
-		module.getStatistic("main.sil").addIncrement(+3);
-		module.getStatistic("ext.moc" ).addIncrement(+3);
+//		module.getStatistic("main.sil").addIncrement(+3);
+//		module.getStatistic("ext.moc" ).addIncrement(+3);
 		
+		// skills
+		module.getSkill("stat.sil").level(3);
+		module.getSkill("stat.moc").level(3);
+		
+		characterSkills.getPanes().sort(SkillEntry::compare);
+		
+		ableAdd.bind(module.getStatistic("skills.known").getValue()
+					.add(module.getStatistic("skills.available").getValue()).greaterThan(0));
+		
+		module.getStatistic("skills.available").getValue().bind(characterLevel.divide(20).multiply(3).add(0));
 
+		characterLevel.setValue(3*20+3);
+		
 		characterName.setText("Torwald de Tureda");
 		characterHistory.setText(
 				    "Rodné mìsto: Uthork"

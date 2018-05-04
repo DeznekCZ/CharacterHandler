@@ -25,14 +25,9 @@ public class SkillGroup extends ModuleEntry<Module,SkillGroup> implements Compar
 	public HashMap<String, Skill> getSkills() {
 		return Skills;
 	}
-
-	public Skill getSkill(String group, String Skill) {
-		return getSkills().get(Skill);
-	} 
 	
-	public Skill getSkill(String groupSkill) {
-		String[] path = groupSkill.split("\\.");
-		return getSkill(path[0], path[1]);
+	public Skill getSkill(String skill) {
+		return getSkills().get(skill);
 	}
 
 	public List<Skill> getSkillsAsList() {

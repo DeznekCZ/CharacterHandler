@@ -1,5 +1,6 @@
 package application;
 
+import core.ModuleLoader;
 import drdplus2.DrDplus2;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -17,7 +18,7 @@ public class Main extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 			
-			Scene module = DrDplus2.load();
+			Scene module = ModuleLoader.load("torwald");
 			
 			primaryStage.setScene(module);
 //			module.loadCharacter();

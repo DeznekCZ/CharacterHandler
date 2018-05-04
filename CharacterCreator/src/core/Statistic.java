@@ -10,6 +10,7 @@ import javafx.beans.Observable;
 import javafx.beans.binding.IntegerExpression;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -39,7 +40,6 @@ public class Statistic extends ModuleEntry<StatisticGroup,Statistic> implements 
 			group.addStatistic(id, this);
 		
 		sumBounds.addListener(this);
-		this.predicted = new SimpleBooleanProperty(true);
 	}
 
 
@@ -58,6 +58,7 @@ public class Statistic extends ModuleEntry<StatisticGroup,Statistic> implements 
 	private String description = null;
 	private SimpleStringProperty sp;
 	private BooleanProperty predicted;
+	private IntegerProperty multiplied;
 	
 	public String getDescription() {
 		return description;
@@ -86,14 +87,31 @@ public class Statistic extends ModuleEntry<StatisticGroup,Statistic> implements 
 	@Override
 	public void invalidated(Observable observable) {
 		int temp = 0;
-		for (Statistic integerStatistic : sumBounds) {
-			temp += integerStatistic.value.get();
+		for (Statistic statistic : sumBounds) {
+			temp += statistic.value.get();
 		}
-		this.value.set( predicted != null && predicted.get() ? (
-				(minimal) ? Math.min(compare, temp) :
-					(maximal) ? Math.max(compare, temp) :	
-						(divider > 0) ? division(temp) : temp
-								): 0);
+		
+		temp = 	(	multiplied != null
+				?	multiplied.intValue() * temp 
+				:	temp
+				);
+		
+		temp =	(	predicted == null || predicted.getValue() 
+				?	temp
+				:	0
+				);
+		
+		this.value.set 
+				(	(minimal) 
+				?	Math.min(compare, temp) 
+				:	(	(maximal) 
+					?	Math.max(compare, temp)
+					:	(	(divider > 0) 
+						?	division(temp)
+						:	temp
+						)
+					)
+				);
 	}
 	
 	private int division(int arg_dValue) {
@@ -146,9 +164,9 @@ public class Statistic extends ModuleEntry<StatisticGroup,Statistic> implements 
 	}
 
 	public static Statistic constant(int i) {
-		Statistic new_statistic = new Statistic(Integer.toString(i));
-		new_statistic.value.set(i);
-		return new_statistic;
+		Statistic constant = new Statistic("CONST#"+Integer.toString(i));
+		constant.value.set(i);
+		return constant;
 	}
 
 	public Statistic divideDown(int arg_divider) {
@@ -262,26 +280,31 @@ public class Statistic extends ModuleEntry<StatisticGroup,Statistic> implements 
 
 
 	private static Statistic modifiers(Statistic statistic, Step node) {
-		Statistic sum = Statistic.init(statistic);
-		if (node.hasAttribute("increment"))
-		{
-			sum.addIncrement(Integer.parseInt(node.attribute("increment")));
-		}
+		Statistic sum;
 		if (node.hasAttribute("divideUp"))
 		{
-			sum = sum.divideUp(Integer.parseInt(node.attribute("divideUp")));
+			sum = statistic.divideUp(Integer.parseInt(node.attribute("divideUp")));
 		}
-		if (node.hasAttribute("divideDown"))
+		else if (node.hasAttribute("divideDown"))
 		{
-			sum = sum.divideDown(Integer.parseInt(node.attribute("divideDown")));
+			sum = statistic.divideDown(Integer.parseInt(node.attribute("divideDown")));
 		}
-		if (node.hasAttribute("min"))
+		else if (node.hasAttribute("increment"))
 		{
-			sum = sum.minimal(Integer.parseInt(node.attribute("min")));
+			statistic.addIncrement(Integer.parseInt(node.attribute("increment")));
+			sum = statistic;
 		}
-		if (node.hasAttribute("max"))
+		else if (node.hasAttribute("min"))
 		{
-			sum = sum.maximal(Integer.parseInt(node.attribute("max")));
+			sum = statistic.minimal(Integer.parseInt(node.attribute("min")));
+		}
+		else if (node.hasAttribute("max"))
+		{
+			sum = statistic.maximal(Integer.parseInt(node.attribute("max")));
+		}
+		else
+		{
+			sum = statistic;
 		}
 		return sum;
 	}
@@ -312,6 +335,17 @@ public class Statistic extends ModuleEntry<StatisticGroup,Statistic> implements 
 		Statistic s = new Statistic("PREDICTED#"+index++);
 		s.predicted = predicted;
 		predicted.addListener((o,l,n) -> {
+			s.invalidated(o);
+		});
+		s.addIncrement(this);
+		return s;
+	}
+
+
+	public Statistic multiplied(IntegerProperty multiplied) {
+		Statistic s = new Statistic("MULTIPLIED#"+index++);
+		s.multiplied = multiplied;
+		multiplied.addListener((o,l,n) -> {
 			s.invalidated(o);
 		});
 		s.addIncrement(this);

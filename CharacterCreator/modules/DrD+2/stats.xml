@@ -2,6 +2,10 @@
 <module id="drd+2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:noNamespaceSchemaLocation="database.xsd">
   <stats>
+    <stats_group id="skills" name="counter support">
+      <stat id="known" name="known skills count" />
+      <stat id="available" name="available skills count" />
+    </stats_group>
     <stats_group id="main" name="Hlavní vlastnosti">
       <stat id="sil" name="síla" desc="Vyjadřuje sílu hrdiny" />
       <stat id="obr" name="obratnost" desc="Vyjadřuje obratnost hrdiny" />
@@ -16,9 +20,11 @@
       </stat>
       <stat id="kon" name="kondice"
         desc="Kondice vyjadřuje hrdinovu schonost vydržet vyšší silové či magické vypětí.">
-        <sum increment="5" min="10">
-          <value ref="ext.odl" />
-          <value ref="main.vol" />
+        <sum  min="10" >
+	        <sum increment="5">
+	          <value ref="ext.odl" />
+	          <value ref="main.vol" />
+	        </sum>
         </sum>
       </stat>
       <stat id="moc" name="moc" desc="Vyjadřuje moc hrdiny\nPoužívá se pro určení síly kouzla.">
@@ -84,8 +90,10 @@
       <stat id="magic" name="kouzlení" desc="">
         <value ref="main.int"/>
       </stat>
-      <stat id="def" name="obrana" desc="">
-        <value ref="main.int" divideUp="2"/>
+      <stat id="def" name="obrana" desc="" >
+        <sum increment="5" >
+          <value ref="main.int" divideUp="2" />
+        </sum>
       </stat>
     </stats_group>
   </stats>

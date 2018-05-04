@@ -19,10 +19,12 @@ import cz.deznekcz.util.xml.XMLStepper;
 import cz.deznekcz.util.xml.XMLStepper.Step;
 import cz.deznekcz.util.xml.XMLStepper.StepDocument;
 import cz.deznekcz.util.xml.XMLStepper.StepList;
+import drdplus2.SkillEntry;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.binding.StringExpression;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -37,8 +39,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -49,22 +55,30 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Pair;
 import javafx.util.converter.IntegerStringConverter;
 
-public class ModuleLoader {
+public abstract class ModuleLoader {
 
-	protected static Scene load (String name){
+	public static Scene load (String character){
 		Parent root =  new BorderPane();
 		try { // , ResourceBundle.getBundle(name)
+			StepDocument doc = XMLStepper.fromFile("characters/"+character+".xml");
+			String moduleName = doc.getNode("module").attribute("id");
+			
 			FXMLLoader loader = new FXMLLoader();
-			root = loader.load(new File("modules/"+name+"/window.fxml").toURI().toURL().openStream());
+			root = loader.load(new File("modules/"+moduleName+"/window.fxml").toURI().toURL().openStream());
 			
 			
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -101,6 +115,17 @@ public class ModuleLoader {
 
 	@FXML
 	protected ChoiceBox<Kind> kindChoice;
+
+	@FXML
+	protected Accordion characterSkills;
+
+	@FXML
+	protected CheckBox editSkills;
+	
+	@FXML
+	protected Button addSkills;
+
+	protected Module module;
 	
 	public void initialize(URL location, ResourceBundle resources) {
 		characterLevel = new SimpleIntegerProperty(0);
@@ -117,6 +142,8 @@ public class ModuleLoader {
 				.concat("\n")
 				.concat(characterLevelText.textProperty())
 				);
+		
+		addSkills.disableProperty().bind(editSkills.selectedProperty().not());
 	}
 
 	protected void groupStats(StatisticGroup statGroup) {
@@ -201,7 +228,7 @@ public class ModuleLoader {
 		});
 	}
 
-	protected void loadData(Module module) {
+	protected void loadData() {
 		Queue<Pair<ILoader<?>, Step>> lateConstruct = new LinkedList<Pair<ILoader<?>, Step>>();
 		
 		Exception e = ITryDo.checkValue(() -> {
@@ -247,5 +274,35 @@ public class ModuleLoader {
 		});
 		raceChoice.setConverter(Race.converter());
 		raceChoice.getSelectionModel().select(0);
+		
+		skillStage = new Stage();
+		skillStage.initModality(Modality.APPLICATION_MODAL);
+		skillStage.setMinHeight(300);
+		skillStage.setMinWidth(300);
+		
+		list = new Accordion();
+		module.getSkillGroupsAsList().stream().sorted(SkillGroup::compare).forEach((skillGroup) -> {
+			Accordion groupList = new Accordion();
+			TitledPane group = new TitledPane(skillGroup.getName(), new ScrollPane(groupList));
+			list.getPanes().add(group);
+			skillGroup.getSkillsAsList().stream().sorted(Skill::compare).forEach((skill) -> {
+				groupList.getPanes().add(SkillEntry.listEntry(skill, ableAdd, characterSkills.getPanes(), editSkills.selectedProperty()));
+			});
+		});
+		
+		skillStage.setScene(new Scene(list));
 	}
+
+	protected BooleanProperty ableAdd;
+
+	private Accordion list;
+
+	private Stage skillStage;
+	
+	@FXML
+	private void addSkills(ActionEvent e) {
+		skillStage.showAndWait();
+	}
+
+	protected abstract String getName();
 }
