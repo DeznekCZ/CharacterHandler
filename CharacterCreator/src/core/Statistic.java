@@ -3,15 +3,12 @@ package core;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import cz.deznekcz.reference.Out;
 import cz.deznekcz.util.xml.XMLStepper.Step;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
-import javafx.beans.binding.IntegerExpression;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -313,12 +310,12 @@ public class Statistic extends ModuleEntry<StatisticGroup,Statistic> implements 
 	private static Statistic loadSubSum(Module module, Step rootSum) {
 		Statistic sum = new Statistic("SUM#"+(index++));
 		if (rootSum.hasElement("sum")) 
-			rootSum.getList("sum").foreach((sumStep) ->
+			rootSum.getList("sum").forEach((Step sumStep) ->
 			{
 				sum.addIncrement(loadSubSum(module, sumStep));
 			});
 		if (rootSum.hasElement("value")) 
-			rootSum.getList("value").foreach((valueStep) ->
+			rootSum.getList("value").forEach((Step valueStep) ->
 			{
 				sum.addIncrement(loadRef(module, valueStep));
 			});

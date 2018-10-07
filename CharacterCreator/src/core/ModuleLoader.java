@@ -19,6 +19,7 @@ import cz.deznekcz.util.xml.XMLStepper;
 import cz.deznekcz.util.xml.XMLStepper.Step;
 import cz.deznekcz.util.xml.XMLStepper.StepDocument;
 import cz.deznekcz.util.xml.XMLStepper.StepList;
+import drdplus2.HealthControl;
 import drdplus2.SkillEntry;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.IntegerBinding;
@@ -26,7 +27,9 @@ import javafx.beans.binding.StringBinding;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableStringValue;
@@ -42,6 +45,7 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
@@ -70,6 +74,7 @@ public abstract class ModuleLoader {
 			
 			FXMLLoader loader = new FXMLLoader();
 			root = loader.load(new File("modules/"+moduleName+"/window.fxml").toURI().toURL().openStream());
+			root.getStylesheets().add(((ModuleLoader) loader.getController()).getPackageName() + "/skin.css");
 			
 			
 		} catch (MalformedURLException e) {
@@ -85,6 +90,8 @@ public abstract class ModuleLoader {
 		
 		return new Scene(root);
 	}
+
+	public abstract String getPackageName();
 
 	@FXML
 	protected VBox healthBar;
@@ -144,6 +151,12 @@ public abstract class ModuleLoader {
 				);
 		
 		addSkills.disableProperty().bind(editSkills.selectedProperty().not());
+		
+		healthControl = new SimpleObjectProperty<>();
+		healthControl.addListener((o,l,n) -> {
+			healthBar.getChildren().clear();
+			healthBar.getChildren().add(n);
+		});
 	}
 
 	protected void groupStats(StatisticGroup statGroup) {
@@ -192,10 +205,10 @@ public abstract class ModuleLoader {
 
 	public static void loadStatistics(StepDocument stepDocument, Module module, Queue<Pair<ILoader<?>, Step>> lateConstruct) {
 		StepList stepList = stepDocument.getList("module/stats/stats_group");
-		stepList.foreach(XMLStepper::hasAttribute, (groupStep) -> {
+		stepList.forEach(XMLStepper::hasAttribute, (groupStep) -> {
 			StatisticGroup group = new StatisticGroup(module, groupStep.attribute("id"), groupStep.attribute("name"));
 			
-			groupStep.getList("stat").foreach(XMLStepper::hasAttribute, (statStep) -> {
+			groupStep.getList("stat").forEach(XMLStepper::hasAttribute, (statStep) -> {
 				Statistic stat = new Statistic(group, statStep.attribute("id"), statStep.attribute("name"));
 				stat.description(statStep.attribute("desc"));
 				lateConstruct.add(new Pair<ILoader<?>, XMLStepper.Step>(stat, statStep));
@@ -205,10 +218,10 @@ public abstract class ModuleLoader {
 
 	public static void loadRaces(StepDocument stepDocument, Module module, Queue<Pair<ILoader<?>, Step>> lateConstruct) {
 		StepList stepList = stepDocument.getList("module/races/race");
-		stepList.foreach(XMLStepper::hasAttribute, (raceStep) -> {
+		stepList.forEach(XMLStepper::hasAttribute, (raceStep) -> {
 			Race group = new Race(module, raceStep.attribute("id"), raceStep.attribute("name"));
 			
-			raceStep.getList("kind").foreach(XMLStepper::hasAttribute, (kindStep) -> {
+			raceStep.getList("kind").forEach(XMLStepper::hasAttribute, (kindStep) -> {
 				Kind kind = new Kind(group, kindStep.attribute("id"), kindStep.attribute("name"));
 				lateConstruct.add(new Pair<ILoader<?>, XMLStepper.Step>(kind, kindStep));
 			});
@@ -217,10 +230,10 @@ public abstract class ModuleLoader {
 
 	public static void loadSkills(StepDocument stepDocument, Module module, Queue<Pair<ILoader<?>, Step>> lateConstruct) {
 		StepList stepList = stepDocument.getList("module/skills/skills_group");
-		stepList.foreach(XMLStepper::hasAttribute, (groupStep) -> {
+		stepList.forEach(XMLStepper::hasAttribute, (groupStep) -> {
 			SkillGroup group = new SkillGroup(module, groupStep.attribute("id"), groupStep.attribute("name"));
 			
-			groupStep.getList("skill").foreach(XMLStepper::hasAttribute, (skillStep) -> {
+			groupStep.getList("skill").forEach(XMLStepper::hasAttribute, (skillStep) -> {
 				Skill skill = new Skill(group, skillStep.attribute("id"), skillStep.attribute("name"));
 				skill.setDescription(skillStep.attribute("desc"));
 				lateConstruct.add(new Pair<ILoader<?>, XMLStepper.Step>(skill, skillStep));
@@ -298,6 +311,8 @@ public abstract class ModuleLoader {
 	private Accordion list;
 
 	private Stage skillStage;
+
+	private ObjectProperty<Control> healthControl;
 	
 	@FXML
 	private void addSkills(ActionEvent e) {
@@ -305,4 +320,8 @@ public abstract class ModuleLoader {
 	}
 
 	protected abstract String getName();
+
+	protected void setHealthControl(HealthControl healthSkin) {
+		this.healthControl.set(healthSkin);
+	}
 }

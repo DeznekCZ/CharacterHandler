@@ -18,14 +18,17 @@ import javafx.stage.Stage;
 
 public class DrDplus2 extends ModuleLoader implements Initializable {
 	
+	private HealthControl health;
+
 	public DrDplus2() {
 		
 	}
-	
+
 	private static final String MODULE = "DrD+2";
+	private static final String PACKAGE = "drdplus2";
 	
-	@Override
-	protected String getName() { return MODULE; }
+	@Override protected String getName() { return MODULE; }
+	@Override public String getPackageName() { return PACKAGE; }
 	
 	static {
 	}
@@ -33,6 +36,8 @@ public class DrDplus2 extends ModuleLoader implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
+		
+		
 		
 		ableAdd = new SimpleBooleanProperty(false);
 		
@@ -50,7 +55,8 @@ public class DrDplus2 extends ModuleLoader implements Initializable {
 		
 		primalStats.setExpandedPane(primalStats.getPanes().get(0));
 		
-		health(3, Statistic.table1(Tables::LIFE, module.getStatistic("ext.kon")));
+		health = new HealthControl(Statistic.table1(Tables::LIFE, module.getStatistic("ext.kon")));
+		setHealthControl(health);
 		
 		// from roots
 		module.getStatistic("main.sil").addIncrement(+1);

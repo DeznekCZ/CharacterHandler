@@ -1,184 +1,398 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module id="drd+2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="database.xsd">
-	<weapons>
-		<main_hand name="hlavní ruka" initial="hand" >
-			<initiative_f2f ref="f2f_inc_main" name="standartní držení" limited="1H/2H"/>
-			<initiative_f2f ref="f2f_inc_booth" name="obouruční držení" limited="1H"/>
-			<initiative_ranged ref="ranged_inc_main" name="střeba jednou rukou" limited="1H"/>
-			<initiative_ranged ref="ranged_inc_booth" name="střeba oběma rukami" limited="2H"/>
-		</main_hand>
-		<off_hand id="off" name="vedlejší ruka" initial="hand" >
-			<initiative_f2f ref="f2f_inc_off"/>
-			<initiative_ranged ref="ranged_inc_off" name="střeba slabší rukou" limited="1H"/>
-		</off_hand>
-		<!-- Posible more hands declared like
+  xsi:noNamespaceSchemaLocation="database.xsd">
+  <weapons>
+    <main_hand name="hlavní ruka" initial="hand">
+      <initiative_f2f ref="f2f_inc_main" name="standartní držení"
+        limited="1H/2H" />
+      <initiative_f2f ref="f2f_inc_booth" name="obouruční držení"
+        limited="1H" />
+      <initiative_ranged ref="ranged_inc_main" name="střeba jednou rukou"
+        limited="1H" />
+      <initiative_ranged ref="ranged_inc_booth" name="střeba oběma rukami"
+        limited="2H" />
+    </main_hand>
+    <off_hand id="off" name="vedlejší ruka" initial="hand">
+      <initiative_f2f ref="f2f_inc_off" />
+      <initiative_ranged ref="ranged_inc_off" name="střeba slabší rukou"
+        limited="1H" />
+    </off_hand>
+    <!-- Posible more hands declared like <off_hand id="third_hand" name="third 
+      hand" initial="turret"> <initiative_f2f ref="f2f_inc_main" name="boj jednou 
+      rukou"/> </off_hand> -->
+    <f2f_inc_main>
+      <sum>
+        <value ref="stat.inc.f2f" />
+        <sum max="0" const="-3">
+          <value ref="skill[#weapon.f2f.skill.id].level" />
+        </sum>
+        <sum max="0">
+          <value ref="#weapon.ranged.strength" multiple="-1" />
+          <value ref="stat.main.sil" />
+        </sum>
+      </sum>
+    </f2f_inc_main>
+    <f2f_attack_main>
+      <sum>
+        <value ref="stat.boj.f2f" />
+        <!-- Min ( 0, ( -2 + skill_level_needed_for_weapon ) ) -->
+        <sum max="0" const="-2">
+          <value ref="skill[#weapon.f2f.skill.id].level" />
+        </sum>
+        <!-- Min ( 0, ( 1 + strength - needed_strength ) ) -->
+        <sum max="0" const="1">
+          <value ref="#weapon.f2f.strength" multiple="-1" />
+          <value ref="stat.main.sil" />
+        </sum>
+      </sum>
+    </f2f_attack_main>
+    <f2f_inc_off>
+      <sum>
+        <value ref="stat.inc.f2f" />
+        <sum max="0" const="-3">
+          <value ref="skill[#weapon.f2f.skill.id].level" />
+        </sum>
+        <sum max="0" const="-3">
+          <value ref="#weapon.ranged.strength" multiple="-1" />
+          <value ref="stat.main.sil" />
+        </sum>
+      </sum>
+    </f2f_inc_off>
+    <f2f_attack_off>
+      <sum>
+        <value ref="stat.boj.f2f" />
+        <!-- Min ( 0, ( -2 + skill_level_needed_for_weapon ) ) -->
+        <sum max="0" const="-2">
+          <value ref="skill[#weapon.f2f.skill.id].level" />
+        </sum>
+        <!-- Min ( 0, ( 1 + strength - needed_strength ) ) -->
+        <sum max="0" const="1">
+          <value ref="#weapon.f2f.strength" multiple="-1" />
+          <value ref="stat.main.sil" />
+        </sum>
+      </sum>
+    </f2f_attack_off>
+    <f2f_inc_booth>
+      <sum>
+        <value ref="stat.inc.f2f" />
+        <sum max="0" const="-3">
+          <value ref="skill[#weapon.f2f.skill.id].level" />
+        </sum>
+        <sum max="0" const="-1">
+          <value ref="#weapon.ranged.strength" multiple="-1" />
+          <value ref="stat.main.sil" />
+        </sum>
+      </sum>
+    </f2f_inc_booth>
+    <f2f_attack_booth>
+      <sum>
+        <value ref="stat.boj.f2f" />
+        <!-- Min ( 0, ( -2 + skill_level_needed_for_weapon ) ) -->
+        <sum max="0" const="-2">
+          <value ref="skill[#weapon.f2f.skill.id].level" />
+        </sum>
+        <!-- Min ( 0, ( 1 + strength - needed_strength ) ) -->
+        <sum max="0" const="3">
+          <value ref="#weapon.f2f.strength" multiple="-1" />
+          <value ref="stat.main.sil" />
+        </sum>
+      </sum>
+    </f2f_attack_booth>
+    <ranged_inc_main>
+      <sum>
+        <value ref="stat.inc.ranged" />
+        <sum max="0" const="-3">
+          <value ref="skill[#weapon.ranged.skill.id].level" />
+        </sum>
+        <sum max="0">
+          <value ref="#weapon.ranged.strength_loading" multiple="-1" />
+          <value ref="stat.main.sil" />
+        </sum>
+      </sum>
+    </ranged_inc_main>
+    <ranged_inc_off>
+      <sum>
+        <value ref="stat.inc.ranged" />
+        <sum max="0" const="-3">
+          <value ref="skill[#weapon.ranged.skill.id].level" />
+        </sum>
+        <sum max="0" const="-1">
+          <value ref="#weapon.ranged.strength_loading" multiple="-1" />
+          <value ref="stat.main.sil" />
+        </sum>
+      </sum>
+    </ranged_inc_off>
+    <ranged_inc_booth>
+      <sum>
+        <value ref="stat.inc.ranged" />
+        <sum max="0" const="-3">
+          <value ref="skill[#weapon.ranged.skill.id].level" />
+        </sum>
+        <sum max="0">
+          <value ref="#weapon.ranged.strength_loading" multiple="-1" />
+          <value ref="stat.main.sil" />
+        </sum>
+      </sum>
+    </ranged_inc_booth>
+    <ranged_attack_main>
+      <sum>
+        <value ref="stat.boj.ranged" />
+        <sum max="0" const="-2">
+          <value ref="skill[#weapon.ranged.skill.id].level" />
+        </sum>
+        <sum max="0" const="1">
+          <value ref="#weapon.ranged.strength_loading" multiple="-1" />
+          <value ref="stat.main.sil" />
+        </sum>
+      </sum>
+    </ranged_attack_main>
+    <ranged_attack_booth>
+      <sum>
+        <value ref="stat.boj.ranged" />
+        <sum max="0" const="-2">
+          <value ref="skill[#weapon.ranged.skill.id].level" />
+        </sum>
+        <sum max="0" const="1">
+          <value ref="#weapon.ranged.strength_loading" multiple="-1" />
+          <value ref="stat.main.sil" />
+        </sum>
+      </sum>
+    </ranged_attack_booth>
+    <ranged_attack_off>
+      <sum>
+        <value ref="stat.boj.ranged" />
+        <sum max="0" const="-2">
+          <value ref="skill[#weapon.ranged.skill.id].level" />
+        </sum>
+        <sum max="0" const="-1">
+          <value ref="#weapon.ranged.strength_loading" multiple="-1" />
+          <value ref="stat.main.sil" />
+        </sum>
+      </sum>
+    </ranged_attack_off>
+    <defense_off>
+      <sum>
+        <value ref="stat.boj.def" />
+        <sum max="0" const="-2">
+          <value ref="skill[#weapon.defense.skill.id].level" />
+        </sum>
+        <sum max="0" const="1">
+          <value ref="#weapon.ranged.strength" multiple="-1" />
+          <value ref="stat.main.sil" />
+        </sum>
+      </sum>
+    </defense_off>
+    <!-- 1H = 1-ruční -->
+    <!-- F = využívá stejnou ruku -->
 
-		<hand id="third_hand" name="third hand" initial="turret">
-			<initiative_f2f ref="f2f_inc_main" name="boj jednou rukou"/>
-		</hand>
-		 -->
-		<f2f_inc_main>
-			<sum>
-				<value ref="stat.inc.f2f" />
-				<sum max="0" const="-3">
-					<value ref="skill[#weapon.f2f.skill.id].level" />
-				</sum>
-				<sum max="0">
-					<value ref="#weapon.ranged.strength" multiple="-1" />
-					<value ref="stat.main.sil" />
-				</sum>
-			</sum>
-		</f2f_inc_main>
-		<f2f_attack_main>
-			<sum>
-				<value ref="stat.boj.f2f" />
-				<!-- Min ( 0, ( -2 + skill_level_needed_for_weapon ) ) -->
-				<sum max="0" const="-2">
-					<value ref="skill[#weapon.f2f.skill.id].level" />
-				</sum>
-				<!-- Min ( 0, ( 1 + strength - needed_strength ) ) -->
-				<sum max="0" const="1">
-					<value ref="#weapon.f2f.strength" multiple="-1" />
-					<value ref="stat.main.sil" />
-				</sum>
-			</sum>
-		</f2f_attack_main>
-		<f2f_inc_off>
-			<sum>
-				<value ref="stat.inc.f2f" />
-				<sum max="0" const="-3">
-					<value ref="skill[#weapon.f2f.skill.id].level" />
-				</sum>
-				<sum max="0" const="-3">
-					<value ref="#weapon.ranged.strength" multiple="-1" />
-					<value ref="stat.main.sil" />
-				</sum>
-			</sum>
-		</f2f_inc_off>
-		<f2f_attack_off>
-			<sum>
-				<value ref="stat.boj.f2f" />
-				<!-- Min ( 0, ( -2 + skill_level_needed_for_weapon ) ) -->
-				<sum max="0" const="-2">
-					<value ref="skill[#weapon.f2f.skill.id].level" />
-				</sum>
-				<!-- Min ( 0, ( 1 + strength - needed_strength ) ) -->
-				<sum max="0" const="1">
-					<value ref="#weapon.f2f.strength" multiple="-1" />
-					<value ref="stat.main.sil" />
-				</sum>
-			</sum>
-		</f2f_attack_off>
-		<f2f_inc_booth>
-			<sum>
-				<value ref="stat.inc.f2f" />
-				<sum max="0" const="-3">
-					<value ref="skill[#weapon.f2f.skill.id].level" />
-				</sum>
-				<sum max="0" const="-1">
-					<value ref="#weapon.ranged.strength" multiple="-1" />
-					<value ref="stat.main.sil" />
-				</sum>
-			</sum>
-		</f2f_inc_booth>
-		<f2f_attack_booth>
-			<sum>
-				<value ref="stat.boj.f2f" />
-				<!-- Min ( 0, ( -2 + skill_level_needed_for_weapon ) ) -->
-				<sum max="0" const="-2">
-					<value ref="skill[#weapon.f2f.skill.id].level" />
-				</sum>
-				<!-- Min ( 0, ( 1 + strength - needed_strength ) ) -->
-				<sum max="0" const="3">
-					<value ref="#weapon.f2f.strength" multiple="-1" />
-					<value ref="stat.main.sil" />
-				</sum>
-			</sum>
-		</f2f_attack_booth>
-		<ranged_inc_main>
-			<sum>
-				<value ref="stat.inc.ranged" />
-				<sum max="0" const="-3">
-					<value ref="skill[#weapon.ranged.skill.id].level" />
-				</sum>
-				<sum max="0">
-					<value ref="#weapon.ranged.strength_loading" multiple="-1" />
-					<value ref="stat.main.sil" />
-				</sum>
-			</sum>
-		</ranged_inc_main>
-		<ranged_inc_off>
-			<sum>
-				<value ref="stat.inc.ranged" />
-				<sum max="0" const="-3">
-					<value ref="skill[#weapon.ranged.skill.id].level" />
-				</sum>
-				<sum max="0" const="-1">
-					<value ref="#weapon.ranged.strength_loading" multiple="-1" />
-					<value ref="stat.main.sil" />
-				</sum>
-			</sum>
-		</ranged_inc_off>
-		<ranged_inc_booth>
-			<sum>
-				<value ref="stat.inc.ranged" />
-				<sum max="0" const="-3">
-					<value ref="skill[#weapon.ranged.skill.id].level" />
-				</sum>
-				<sum max="0">
-					<value ref="#weapon.ranged.strength_loading" multiple="-1" />
-					<value ref="stat.main.sil" />
-				</sum>
-			</sum>
-		</ranged_inc_booth>
-		<ranged_attack_main>
-			<sum>
-				<value ref="stat.boj.ranged" />
-				<sum max="0" const="-2">
-					<value ref="skill[#weapon.ranged.skill.id].level" />
-				</sum>
-				<sum max="0" const="1">
-					<value ref="#weapon.ranged.strength_loading" multiple="-1" />
-					<value ref="stat.main.sil" />
-				</sum>
-			</sum>
-		</ranged_attack_main>
-		<ranged_attack_booth>
-			<sum>
-				<value ref="stat.boj.ranged" />
-				<sum max="0" const="-2">
-					<value ref="skill[#weapon.ranged.skill.id].level" />
-				</sum>
-				<sum max="0" const="1">
-					<value ref="#weapon.ranged.strength_loading" multiple="-1" />
-					<value ref="stat.main.sil" />
-				</sum>
-			</sum>
-		</ranged_attack_booth>
-		<ranged_attack_off>
-			<sum>
-				<value ref="stat.boj.ranged" />
-				<sum max="0" const="-2">
-					<value ref="skill[#weapon.ranged.skill.id].level" />
-				</sum>
-				<sum max="0" const="-1">
-					<value ref="#weapon.ranged.strength_loading" multiple="-1" />
-					<value ref="stat.main.sil" />
-				</sum>
-			</sum>
-		</ranged_attack_off>
-		<defense_off>
-			<sum>
-				<value ref="stat.boj.def" />
-				<sum max="0" const="-2">
-					<value ref="skill[#weapon.defense.skill.id].level" />
-				</sum>
-				<sum max="0" const="1">
-					<value ref="#weapon.ranged.strength" multiple="-1" />
-					<value ref="stat.main.sil" />
-				</sum>
-			</sum>
-		</defense_off>
-	</weapons>
+    <!-- slash_damage = sečné zranění -->
+    <!-- piercing_damage = bodné zranění -->
+    <!-- blunt_damage = drtivé zranění -->
+
+    <!-- dále napsaná zbraň slouží jako příklad, je nutno je opravit -->
+
+    <!-- beze zbraně -->
+    <weapon id="hand">
+      <f2f name="ruka" skill="weapon.bezez_brane" hand="1H"
+        strength="0" length="0" attack="0" blunt_damage="-2" />
+    </weapon>
+    <weapon id="armored_hand">
+      <f2f name="okovaná_rukavice" skill="weapon.beze_zbrane" hand="1H"
+        strength="0" length="0" attack="0" blunt_damage="0" />
+    </weapon>
+    <weapon id="leg">
+      <f2f name="noha" skill="weapon.beze_zbrane" hand="1H"
+        strength="0" length="0" attack="-1" blunt_damage="+1" />
+    </weapon>
+    <weapon id="armored_shoe">
+      <f2f name="okovaná_bota" skill="weapon.beze_zbrane" hand="1H"
+        strength="0" length="0" attack="-2" blunt_damage="+4" />
+    </weapon>
+
+    <!-- nože a dýky -->
+    <weapon id="knife">
+      <f2f name="nůž" skill="weapon.noze_dyky" hand="1H" strength="-3"
+        length="0" attack="0" piercing_damage="-2" />
+      <defense name="nůž" skill="weapon.noze_dyky" hand="1HF"
+        strength="-3" defense="1" />
+    </weapon>
+    <weapon id="dagger">
+      <f2f name="dýka" skill="weapon.noze_dyky" hand="1H" strength="-1"
+        length="0" attack="1" piercing_damage="+1" />
+      <defense name="dýka" skill="weapon.noze_dyky" hand="1HF"
+        strength="-1" defense="2" />
+    </weapon>
+    <weapon id="dagger_stabbing">
+      <f2f name="bodná_dýka " skill="weapon.noze_dyky" hand="1H"
+        strength="-1" length="0" attack="2" piercing_damage="0" />
+      <defense name="bodná_dýka" skill="weapon.noze_dyky" hand="1HF"
+        strength="-1" defense="1" />
+    </weapon>
+    <weapon id="long_knife">
+      <f2f name="dlouhý_nůž" skill="weapon.noze_dyky" hand="1H"
+        strength="-2" length="1" attack="1" piercing_damage="-1" />
+      <defense name="dlouhý_nůž" skill="weapon.noze_dyky" hand="1HF"
+        strength="-2" defense="1" />
+    </weapon>
+    <weapon id="long_dagger">
+      <f2f name="dlouhá_dýka" skill="weapon.noze_dyky" hand="1H"
+        strength="+1" length="1" attack="1" piercing_damage="+2" />
+      <defense name="dlouhá_dýka" skill="weapon.noze_dyky" hand="1HF"
+        strength="+1" defense="2" />
+    </weapon>
+
+    <!-- sekery -->
+    <weapon id="lightweight_axe">
+      <f2f name="lehká_sekera" skill="weapon.sekery" hand="1H"
+        strength="+3" length="1" attack="3" slash_damage="+3" />
+      <defense name="lehká_sekera" skill="weapon.sekery" hand="1HF"
+        strength="+3" defense="2" />
+    </weapon>
+    <weapon id="axe">
+      <f2f name="sekera" skill="weapon.sekery" hand="1H" strength="+6"
+        length="2" attack="3" slash_damage="+5" />
+      <defense name="sekera" skill="weapon.sekery" hand="1HF"
+        strength="+6" defense="2" />
+    </weapon>
+    <weapon id="war_axe">
+      <f2f name="válečná_sekera" skill="weapon.sekery" hand="1H"
+        strength="+9" length="3" attack="3" slash_damage="+7" />
+      <defense name="válečná_sekera" skill="weapon.sekery" hand="1HF"
+        strength="+9" defense="3" />
+    </weapon>
+    <weapon id="twohanded_axe">
+      <f2f name="obouruční_sekera" skill="weapon.sekery" hand="2H"
+        strength="+12" length="3" attack="4" slash_damage="+10" />
+      <defense name="obouruční_sekera" skill="weapon.sekery"
+        hand="2HF" strength="+12" defense="3" />
+    </weapon>
+
+    <!-- šavle a tesáky -->
+    <weapon id="machete">
+      <f2f name="mačeta" skill="weapon.savle_tesaky" hand="1H"
+        strength="+2" length="1" attack="2" slash_damage="+2" />
+      <defense name="mačeta" skill="weapon.savle_tesaky" hand="1HF"
+        strength="+2" defense="2" />
+    </weapon>
+    <weapon id="light_saber">
+      <f2f name="lehká_šavle" skill="weapon.savle_tesaky" hand="1H"
+        strength="+3" length="2" attack="3" slash_damage="+1" />
+      <defense name="light_saber" skill="weapon.savle_tesaky"
+        hand="1HF" strength="+3" defense="3" />
+    </weapon>
+    <weapon id="fang">
+      <f2f name="tesák" skill="weapon.savle_tesaky" hand="1H"
+        strength="+3" length="1" attack="2" slash_damage="+3" />
+      <defense name="tesák" skill="weapon.savle_tesaky" hand="1HF"
+        strength="+3" defense="3" />
+    </weapon>
+    <weapon id="saber">
+      <f2f name="šavle" skill="weapon.savle_tesaky" hand="1H"
+        strength="+6" length="2" attack="4" slash_damage="+4" />
+      <defense name="šavle" skill="weapon.savle_tesaky" hand="1HF"
+        strength="+6" defense="3" />
+    </weapon>
+    <weapon id="heavy_saber">
+      <f2f name="těžká_šavle" skill="weapon.savle_tesaky" hand="1H"
+        strength="+9" length="2" attack="4" slash_damage="+6" />
+      <defense name="těžká_šavle" skill="weapon.savle_tesaky"
+        hand="1HF" strength="+9" defense="4" />
+    </weapon>
+
+    <!-- meče -->
+    <weapon id="short_sword">
+      <f2f name="krátký_meč" skill="weapon.meče" hand="1H" strength="+2"
+        length="1" attack="3" slash_damage="+1" />
+      <defense name="krátký_meč" skill="weapon.meče" hand="1HF"
+        strength="+2" defense="3" />
+    </weapon>
+    <weapon id="short_wide_sword">
+      <f2f name="krátký_široký_meč" skill="weapon.meče" hand="1H"
+        strength="+4" length="1" attack="3" slash_damage="+3" />
+      <defense name="krátký_široký_meč" skill="weapon.meče"
+        hand="1HF" strength="+4" defense="4" />
+    </weapon>
+    <weapon id="wide_sword">
+      <f2f name="široký_meč" skill="weapon.meče" hand="1H" strength="+6"
+        length="2" attack="4" slash_damage="+4" />
+      <defense name="široký_meč" skill="weapon.meče" hand="1HF"
+        strength="+6" defense="4" />
+    </weapon>
+    <weapon id="long_sword">
+      <f2f name="dlouhý_meč" skill="weapon.meče" hand="1H" strength="+7"
+        length="3" attack="5" slash_damage="+3" />
+      <defense name="dlouhý_meč" skill="weapon.meče" hand="1HF"
+        strength="+7" defense="4" />
+    </weapon>
+    <weapon id="bastard_sword">
+      <f2f name="bastard_meč" skill="weapon.meče" hand="1H"
+        strength="+8" length="2" attack="5" slash_damage="+5" />
+      <defense name="bastard_meč" skill="weapon.meče" hand="1HF"
+        strength="+8" defense="5" />
+    </weapon>
+    <weapon id="barbar_sword">
+      <f2f name="barbarský_meč" skill="weapon.meče" hand="1H"
+        strength="+10" length="2" attack="6" slash_damage="+4" />
+      <defense name="barbarský_meč" skill="weapon.meče" hand="1HF"
+        strength="+10" defense="4" />
+    </weapon>
+    <weapon id="twohand_sword">
+      <f2f name="obouruční_meč" skill="weapon.meče" hand="2H"
+        strength="+12" length="3" attack="5" slash_damage="+9" />
+      <defense name="oboruční_meč" skill="weapon.meče" hand="2HF"
+        strength="+12" defense="4" />
+    </weapon>
+    <!-- palice a kyje -->
+    <weapon id="baton">
+      <f2f name="obušek" skill="weapon.palice_kyje" hand="1H"
+        strength="+1" length="1" attack="1" blunt_damage="+2" />
+      <defense name="obušek" skill="weapon.palice_kyje" hand="1HF"
+        strength="+1" defense="1" />
+    </weapon>
+    <weapon id="club">
+      <f2f name="kyj" skill="weapon.palice_kyje" hand="1H" strength="+3"
+        length="1" attack="2" blunt_damage="+3" />
+      <defense name="kyj" skill="weapon.palice_kyje" hand="1HF"
+        strength="+3" defense="2" />
+    </weapon>
+    <weapon id="crooked_club">
+      <f2f name="okovaný_kyj" skill="weapon.palice_kyje" hand="1H"
+        strength="+5" length="1" attack="2" blunt_damage="+5" />
+      <defense name="okovaný_kyj" skill="weapon.palice_kyje"
+        hand="1HF" strength="+5" defense="2" />
+    </weapon>
+    <weapon id="light_mace">
+      <f2f name="lehký_palcát" skill="weapon.palice_kyje" hand="1H"
+        strength="+5" length="2" attack="3" blunt_damage="+4" />
+      <defense name="lehký_palcát" skill="weapon.palice_kyje"
+        hand="1HF" strength="+5" defense="2" />
+    </weapon>
+    <weapon id="mace">
+      <f2f name="palcát" skill="weapon.palice_kyje" hand="1H"
+        strength="+8" length="2" attack="4" blunt_damage="+6" />
+      <defense name="palcát" skill="weapon.palice_kyje" hand="1HF"
+        strength="+8" defense="3" />
+    </weapon>
+    <weapon id="heavy_club">
+      <f2f name="těžký_kyj" skill="weapon.palice_kyje" hand="1H"
+        strength="+8" length="2" attack="3" blunt_damage="+7" />
+      <defense name="těžký_kyj" skill="weapon.palice_kyje" hand="1HF"
+        strength="+8" defense="2" />
+    </weapon>
+    <weapon id="war_hammer">
+      <f2f name="válečné_kladivo" skill="weapon.palice_kyje" hand="1H"
+        strength="+10" length="3" attack="5" blunt_damage="+7" />
+      <defense name="válečné_kladivo" skill="weapon.palice_kyje"
+        hand="1HF" strength="+10" defense="3" />
+    </weapon>
+    <weapon id="twohanded_club">
+      <f2f name="obouruční_kyj" skill="weapon.palice_kyje" hand="2H"
+        strength="+11" length="2" attack="5" blunt_damage="+7" />
+      <defense name="obouruční_kyj" skill="weapon.palice_kyje"
+        hand="2HF" strength="+11" defense="2" />
+    </weapon>
+    <!-- řemdihy a bijáky -->
+    <!-- hole a kopí -->
+    <!-- sudlice a trojzubce -->
+  </weapons>
 </module>

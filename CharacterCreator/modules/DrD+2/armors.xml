@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module id="drd+2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="database.xsd">
+  <armors>
+    <armor id=cloth name="oblečení"/>
+    <armor id="padden" name="prošívaná zbroj" 
+        slash_damage="5" piercing_damage="2" blunt_damage="3"
+        extendable="cloth" />
+    <armor id="chainmail" name="kroužková zbroj"
+        slash_damage="8" piercing_damage="3" blunt_damage="2" hardness="4"
+        extendable="cloth padden" />
+  </armors>
+</module>

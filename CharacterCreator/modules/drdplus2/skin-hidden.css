@@ -1,0 +1,69 @@
+.accordion {
+	-fx-background-color: powderblue;
+}
+
+.border-pane {
+	-fx-background-color: powderblue;
+}
+
+.hbox {
+	-fx-background-color: powderblue;
+}
+
+.vbox {
+	-fx-background-color: powderblue;
+}
+
+.tab-pane .tab-content-area {
+	-fx-background-color: powderblue;
+}
+
+.titled-pane .content {
+	-fx-background-color: powderblue;
+}
+
+.text-area:readonly .content {
+	-fx-background-color: skyblue;
+	-fx-font-style: italic;
+	-fx-text-fill: black;
+}
+
+.text-area .content {
+	-fx-background-color: white;
+}
+
+.button {
+	-fx-background-color: dodgerblue;
+	-fx-border-color: transparent;
+	-fx-border-radius: 20;
+	-fx-border-width: 0;
+	-fx-background-insets: 0;
+}
+
+.button:hover {
+	-fx-background-color: deepskyblue;
+	-fx-border-color: transparent;
+	-fx-border-radius: 20;
+	-fx-border-width: 0;
+	-fx-background-insets: 0;
+}
+
+.button:pressed {
+	-fx-background-color: darkblue;
+	-fx-border-color: transparent;
+	-fx-border-radius: 20;
+	-fx-border-width: 0;
+	-fx-background-insets: 0;
+}
+
+.button .text {
+	-fx-background-insets: 0;
+}
+
+.button:hover .text {
+	-fx-background-insets: 0;
+}
+
+.button:pressed .text {
+	-fx-background-insets: 0;
+}
